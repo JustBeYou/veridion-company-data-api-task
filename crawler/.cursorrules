@@ -1,0 +1,326 @@
+# Web Crawler Project - AI Agent Instructions
+
+## Project Overview
+This project creates a web crawler component to extract company data points (name, phone, social media links, address) from websites using Python 3, Scrapy, and following Acceptance Test Driven Development (ATDD) with Behavior Driven Development (BDD) principles.
+
+**IMPORTANT**: This crawler is one component of a larger multi-component project. All crawler-related code lives in the `crawler/` subfolder.
+
+## Core Principles
+
+### 1. Test-First Development (MANDATORY)
+- **ALL features MUST be written as Gherkin scenarios first**
+- **NO production code without corresponding failing tests**
+- **ALL tests must pass before any commit**
+- Use behave for BDD testing with Cucumber-style feature files
+- Write acceptance tests, integration tests, and unit tests as appropriate
+- Test coverage must be comprehensive - no exceptions
+
+### 2. Code Quality (NON-NEGOTIABLE)
+- Python 3.11+ with full type annotations (mypy strict mode)
+- Use latest versions of: black, isort, flake8, mypy, pylint
+- All quality checks must pass - zero warnings/errors allowed
+- Use pre-commit hooks for automated quality checks
+- **ALWAYS generate config files using commands/tools, never write by hand**
+
+### 3. Project Structure
+```
+project_root/
+├── crawler/                    # THIS COMPONENT
+│   ├── .cursorrules
+│   ├── Makefile
+│   ├── requirements.txt
+│   ├── requirements-dev.txt
+│   ├── setup.py
+│   ├── .gitignore
+│   ├── .pre-commit-config.yaml
+│   ├── mypy.ini
+│   ├── .flake8
+│   ├── pyproject.toml
+│   ├── src/
+│   │   ├── __init__.py
+│   │   ├── spiders/
+│   │   ├── items.py
+│   │   ├── pipelines.py
+│   │   ├── settings.py
+│   │   └── middlewares.py
+│   ├── features/
+│   │   ├── steps/
+│   │   └── *.feature
+│   ├── tests/
+│   │   ├── unit/
+│   │   └── acceptance/
+│   └── docs/
+├── other_component_1/          # OTHER COMPONENTS
+├── other_component_2/
+└── project_docs/
+```
+
+## Development Workflow (STRICT ORDER)
+
+### Step 1: Write Feature File
+- Start with `.feature` files in Gherkin syntax
+- Define acceptance criteria as scenarios
+- Focus on business value and user behavior
+- Example structure:
+```gherkin
+Feature: Extract company contact information
+  As a data analyst
+  I want to extract company phone numbers from websites
+  So that I can build a contact database
+
+  Scenario: Extract phone number from HTML page
+    Given a website contains a phone number in standard format
+    When I crawl the website
+    Then the phone number should be extracted and stored
+```
+
+### Step 2: Implement Step Definitions
+- Create step definitions in `features/steps/`
+- Use behave framework
+- Make tests fail initially (red phase)
+
+### Step 3: Write Minimal Production Code
+- Implement just enough code to make tests pass (green phase)
+- Use Scrapy framework for crawling
+- Follow SOLID principles and clean architecture
+
+### Step 4: Refactor
+- Improve code quality while keeping tests green
+- Ensure all quality checks pass
+
+## Technical Requirements
+
+### Core Dependencies (Install Latest)
+- Install programmatically and freeze in requirements.txt
+- Do not specify versions in initial installation commands
+```bash
+# Install latest versions, then freeze
+pip install scrapy behave requests lxml cssselect
+pip freeze > requirements.txt
+```
+
+### Development Dependencies (Install Latest)
+```bash
+# Install latest development tools, then freeze  
+pip install black isort flake8 mypy pylint pre-commit pytest coverage
+pip freeze > requirements-dev.txt
+```
+
+### Configuration Files
+- **MANDATORY**: Generate all config files using commands/tools
+- **NEVER** write config files manually to ensure determinism
+- Use tool-specific commands to generate: .flake8, mypy.ini, pyproject.toml, etc.
+- Document the generation commands in setup scripts
+- MANDATORY for all functions, methods, and class attributes
+- Use strict mypy configuration
+- No `Any` types unless absolutely necessary
+- Use generic types and protocols where appropriate
+
+### Type Annotations
+### Code Formatting
+- Use commands to generate formatting configs, never write manually
+- black with default settings (generate pyproject.toml via command)
+- isort with black compatibility (generate .isort.cfg via command)  
+- flake8 configuration generated via commands
+
+## Scrapy Implementation Guidelines
+
+### 1. Extensible Architecture
+- Design for easy extension to JS-rendered pages
+- Use middleware pattern for different page types
+- Implement abstract base classes for extractors
+
+### 2. Data Extraction Strategy
+```python
+from typing import Protocol, List, Optional
+from dataclasses import dataclass
+
+@dataclass
+class CompanyData:
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    social_media: List[str] = None
+    address: Optional[str] = None
+
+class DataExtractor(Protocol):
+    def extract_company_name(self, response) -> Optional[str]: ...
+    def extract_phone(self, response) -> Optional[str]: ...
+    def extract_social_media(self, response) -> List[str]: ...
+    def extract_address(self, response) -> Optional[str]: ...
+```
+
+### 3. Spider Structure
+- One spider per website type initially
+- Use Item classes for structured data
+- Implement robust error handling
+- Add logging and monitoring
+
+## Testing Strategy
+
+### Feature Files Structure
+```gherkin
+Feature: Company Name Extraction
+  Background:
+    Given the web crawler is initialized
+    And the target website is accessible
+
+  Scenario Outline: Extract company names from different HTML structures
+    Given a webpage with company name in <location>
+    When the crawler processes the page
+    Then the company name should be "<expected_name>"
+    And the extraction confidence should be above <threshold>
+
+    Examples:
+      | location | expected_name | threshold |
+      | title tag | "Acme Corp" | 0.8 |
+      | h1 tag | "Best Company" | 0.9 |
+      | meta tag | "Tech Solutions" | 0.7 |
+```
+
+### Unit Tests
+- Test individual extraction functions
+- Mock HTTP responses
+- Test edge cases and error conditions
+
+### Acceptance Tests
+- Test spider end-to-end functionality
+- Use test websites/fixtures
+- Verify pipeline processing
+
+## Makefile Targets (REQUIRED)
+
+```makefile
+.PHONY: help install test lint format type-check quality-check run clean
+
+help:
+	@echo "Available commands:"
+	@echo "  install      - Install dependencies"
+	@echo "  test         - Run all tests"
+	@echo "  lint         - Run linting"
+	@echo "  format       - Format code"
+	@echo "  type-check   - Run type checking"
+	@echo "  quality-check - Run all quality checks"
+	@echo "  run          - Run crawler"
+	@echo "  clean        - Clean build artifacts"
+
+install:
+	python -m venv venv
+	./venv/bin/pip install --upgrade pip
+	./venv/bin/pip install scrapy behave requests lxml cssselect
+	./venv/bin/pip freeze > requirements.txt
+	./venv/bin/pip install black isort flake8 mypy pylint pre-commit pytest coverage
+	./venv/bin/pip freeze > requirements-dev.txt
+	./venv/bin/pre-commit install
+
+test:
+	./venv/bin/behave features/
+	./venv/bin/pytest tests/
+
+lint:
+	./venv/bin/flake8 src/ tests/ features/
+	./venv/bin/pylint src/
+
+format:
+	./venv/bin/black src/ tests/ features/
+	./venv/bin/isort src/ tests/ features/
+
+type-check:
+	./venv/bin/mypy src/
+
+quality-check: format lint type-check test
+	@echo "All quality checks passed!"
+```
+
+## AI Agent Behavior Rules
+
+### 1. NEVER Skip Tests
+- Always write feature files before implementation
+- Ensure all scenarios are covered
+- Run tests after every change
+- **Work within the crawler/ subfolder for this component**
+
+### 2. Code Generation Order
+1. Write/update `.feature` file in crawler/features/
+2. Run `behave` to see failing scenarios  
+3. Implement step definitions in crawler/features/steps/
+4. Write minimal production code in crawler/src/
+5. Run `make quality-check` from crawler/ directory
+6. Refactor if needed
+
+### 3. Error Handling
+- All functions must handle expected errors gracefully
+- Use proper logging instead of print statements
+- Implement retry mechanisms for network requests
+- Validate all inputs with type checking
+
+### 4. Documentation
+- Docstrings for all public functions/classes
+- README with setup and usage instructions
+- Architecture decision records for major choices
+
+### 5. Performance Considerations
+- Use appropriate Scrapy settings for politeness
+- Implement request throttling
+- Consider memory usage for large crawls
+- Add performance tests for critical paths
+
+### 7. Performance Considerations
+
+1. `make quality-check` returns 0
+2. All behave scenarios pass
+3. Code coverage > 90%
+4. No mypy errors in strict mode
+5. No flake8/pylint violations
+6. Black formatting applied
+7. All imports sorted with isort
+
+## Quality Gates (ALL MUST PASS)
+
+### Design Considerations
+- Abstract page loading mechanism
+- Pluggable renderer backends (requests vs selenium/playwright)
+- Configurable wait strategies for dynamic content
+- Middleware for different page types
+
+### Example Extension Interface
+```python
+from abc import ABC, abstractmethod
+
+class PageRenderer(ABC):
+    @abstractmethod
+    async def render_page(self, url: str) -> str:
+        """Render page and return HTML content"""
+        pass
+
+class StaticRenderer(PageRenderer):
+    """For plain HTML pages"""
+    pass
+
+class JSRenderer(PageRenderer):
+    """For JavaScript-heavy pages (future implementation)"""
+    pass
+```
+
+## Extension Points for Future JS Support
+
+## Prohibited Practices
+
+1. **NO** code without tests
+2. **NO** commits with failing tests
+3. **NO** missing type annotations
+4. **NO** print statements (use logging)
+5. **NO** hardcoded values (use configuration)
+6. **NO** ignored quality check failures
+7. **NO** `# type: ignore` without justification comments
+8. **NO** manually written config files (use generation commands)
+
+## Success Criteria
+
+- All feature scenarios pass
+- Code coverage > 90%
+- Zero quality check violations
+- Extensible architecture for JS pages
+- Clean, maintainable, well-documented code
+- Robust error handling and logging
+
+Remember: **Test-first, quality-first, no exceptions! Work within crawler/ subfolder for this component.**
