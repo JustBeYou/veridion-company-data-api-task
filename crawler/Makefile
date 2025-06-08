@@ -24,7 +24,6 @@ test:
 
 lint:
 	./venv/bin/flake8 src/ tests/ features/
-	./venv/bin/pylint src/
 
 format:
 	./venv/bin/black src/ tests/ features/

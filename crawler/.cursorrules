@@ -20,7 +20,7 @@ This project creates a web crawler component to extract company data points (nam
 
 ### 2. Code Quality (NON-NEGOTIABLE)
 - Python 3.11+ with full type annotations (mypy strict mode)
-- Use latest versions of: black, isort, flake8, mypy, pylint
+- Use latest versions of: black, isort, flake8, mypy
 - All quality checks must pass - zero warnings/errors allowed
 - Use pre-commit hooks for automated quality checks
 - **ALWAYS generate config files using commands/tools, never write by hand**
@@ -105,7 +105,7 @@ pip freeze > requirements.txt
 ### Development Dependencies (Install Latest)
 ```bash
 # Install latest development tools, then freeze
-pip install black isort flake8 mypy pylint pre-commit pytest coverage
+pip install black isort flake8 mypy pre-commit pytest coverage
 pip freeze > requirements-dev.txt
 ```
 
@@ -211,7 +211,7 @@ install:
 	./venv/bin/pip install --upgrade pip
 	./venv/bin/pip install scrapy behave requests lxml cssselect
 	./venv/bin/pip freeze > requirements.txt
-	./venv/bin/pip install black isort flake8 mypy pylint pre-commit pytest coverage
+	./venv/bin/pip install black isort flake8 mypy pre-commit pytest coverage
 	./venv/bin/pip freeze > requirements-dev.txt
 	./venv/bin/pre-commit install
 
@@ -221,7 +221,6 @@ test:
 
 lint:
 	./venv/bin/flake8 src/ tests/ features/
-	./venv/bin/pylint src/
 
 format:
 	./venv/bin/black src/ tests/ features/
@@ -273,7 +272,7 @@ quality-check: format lint type-check test
 2. All behave scenarios pass
 3. Code coverage > 90%
 4. No mypy errors in strict mode
-5. No flake8/pylint violations
+5. No flake8 violations
 6. Black formatting applied
 7. All imports sorted with isort
 

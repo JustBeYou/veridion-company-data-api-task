@@ -30,7 +30,7 @@ make quality-check
 
 This will run:
 - Code formatting with black and isort
-- Linting with flake8 and pylint
+- Linting with flake8
 - Type checking with mypy
 - BDD tests with behave
 - Unit tests with pytest

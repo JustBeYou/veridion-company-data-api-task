@@ -38,9 +38,7 @@ class CompanyCrawlerMiddleware:
         """
         return None
 
-    def process_spider_output(
-        self, response: Response, result: Iterator, spider: Spider
-    ) -> Iterator:
+    def process_spider_output(self, response: Response, result: Iterator, spider: Spider) -> Iterator:
         """Process spider output.
 
         Args:

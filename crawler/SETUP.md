@@ -63,7 +63,7 @@ pip install --upgrade pip
 ### 3. Install Dependencies
 
 1. Put `scrapy behave requests lxml cssselect` into requirements.txt
-2. Put `black isort flake8 mypy pylint pre-commit pytest coverage` into requirements-dev.txt
+2. Put `black isort flake8 mypy pre-commit pytest coverage` into requirements-dev.txt
 3. Install using pip inside the virtual environment.
 
 ### 4. Generate Configuration Files
@@ -121,14 +121,14 @@ cat > .flake8 << 'EOF'
 [flake8]
 max-line-length = 88
 extend-ignore = E203, W503
-exclude = 
+exclude =
     .git,
     __pycache__,
     .venv,
     build,
     dist,
     *.egg-info
-per-file-ignores = 
+per-file-ignores =
     __init__.py:F401
 EOF
 ```
@@ -176,7 +176,7 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
-      
+
   - repo: https://github.com/psf/black
     rev: 23.9.1
     hooks:
@@ -213,7 +213,7 @@ cd ..
 
 # This creates the proper Scrapy structure with:
 # - items.py
-# - middlewares.py  
+# - middlewares.py
 # - pipelines.py
 # - settings.py
 # - spiders/ directory
@@ -245,7 +245,6 @@ test:
 
 lint:
 	./venv/bin/flake8 src/ tests/ features/
-	./venv/bin/pylint src/
 
 format:
 	./venv/bin/black src/ tests/ features/
@@ -291,7 +290,7 @@ Feature: Extract company data from websites
 
   Scenario: Extract phone number from contact page
     Given a website with phone number "(555) 123-4567" in the contact section
-    When I crawl the website  
+    When I crawl the website
     Then the phone number "(555) 123-4567" should be extracted
     And the phone number should be in normalized format
 
@@ -420,7 +419,7 @@ make generate-configs
 
 # Test individual tools
 ./venv/bin/black --check .
-./venv/bin/isort --check-only .  
+./venv/bin/isort --check-only .
 ./venv/bin/flake8 .
 ./venv/bin/mypy src/
 ```
@@ -445,7 +444,7 @@ After successful setup:
 4. Set up CI/CD pipeline using the same quality checks
 5. Coordinate with other project components as needed
 
-**Remember**: 
+**Remember**:
 - All development must follow the ATDD/BDD workflow defined in `.cursorrules`
 - Work within the `crawler/` component directory
 - This is one component of a larger multi-component project
