@@ -10,14 +10,14 @@ This is a web crawler component for extracting company data points (name, phone,
    cd <repository-dir>/crawler
    ```
 
-2. Install dependencies:
+2. Install Poetry (if not already installed):
    ```bash
-   make install
+   curl -sSL https://install.python-poetry.org | python3 -
    ```
 
-3. Activate the virtual environment:
+3. Install dependencies:
    ```bash
-   source venv/bin/activate
+   poetry install
    ```
 
 ## Running Tests

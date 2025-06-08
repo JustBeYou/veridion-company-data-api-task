@@ -9,6 +9,7 @@ This guide will walk you through initializing the web crawler component from scr
 - Python 3.11 or higher
 - Git
 - Make (for running Makefile commands)
+- Poetry (for dependency management)
 
 ## Quick Start
 
@@ -18,8 +19,11 @@ Navigate to the crawler component directory and run setup:
 # Navigate to the project root, then to crawler component
 cd path/to/your/project/crawler
 
-# Run the complete setup
-make setup-component
+# Install Poetry if not already installed
+curl -sSL https://install.python-poetry.org | python3 -
+
+# Install dependencies
+poetry install
 ```
 
 ## Manual Step-by-Step Setup
@@ -45,73 +49,27 @@ touch tests/unit/__init__.py
 touch tests/acceptance/__init__.py
 ```
 
-### 2. Initialize Virtual Environment
+### 2. Initialize Poetry Project
 
 ```bash
-# Create virtual environment
-python -m venv venv
+# Initialize Poetry project
+poetry init --no-interaction
 
-# Activate virtual environment
-source venv/bin/activate  # Linux/Mac
-# or
-venv\Scripts\activate     # Windows
+# Add production dependencies
+poetry add scrapy behave requests lxml cssselect
 
-# Upgrade pip
-pip install --upgrade pip
+# Add development dependencies
+poetry add --group dev black isort flake8 mypy pre-commit pytest coverage
 ```
 
-### 3. Install Dependencies
-
-1. Put `scrapy behave requests lxml cssselect` into requirements.txt
-2. Put `black isort flake8 mypy pre-commit pytest coverage` into requirements-dev.txt
-3. Install using pip inside the virtual environment.
-
-### 4. Generate Configuration Files
+### 3. Generate Configuration Files
 
 **IMPORTANT**: Never write config files manually. Use these commands:
 
-#### Black Configuration
+#### Black and isort Configuration
 ```bash
-# Generate black configuration in pyproject.toml
-cat > pyproject.toml << 'EOF'
-[tool.black]
-line-length = 88
-target-version = ['py311']
-include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | build
-  | dist
-)/
-'''
-EOF
-```
-
-#### isort Configuration
-```bash
-# Generate isort configuration
-python -c "
-import configparser
-config = configparser.ConfigParser()
-config['settings'] = {
-    'profile': 'black',
-    'multi_line_output': '3',
-    'line_length': '88',
-    'known_first_party': 'src',
-    'known_third_party': 'scrapy,behave,requests,lxml',
-    'sections': 'FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER',
-    'default_section': 'THIRDPARTY'
-}
-with open('.isort.cfg', 'w') as f:
-    config.write(f)
-"
+# Configuration for black and isort is already included in pyproject.toml
+# Poetry created this file during initialization
 ```
 
 #### Flake8 Configuration
@@ -200,10 +158,10 @@ repos:
 EOF
 
 # Install pre-commit hooks
-pre-commit install
+poetry run pre-commit install
 ```
 
-### 5. Generate Scrapy Project Structure
+### 4. Generate Scrapy Project Structure
 
 ```bash
 # Initialize Scrapy project within src/ directory
@@ -219,7 +177,7 @@ cd ..
 # - spiders/ directory
 ```
 
-### 6. Create Makefile
+### 5. Create Makefile
 
 ```bash
 cat > Makefile << 'EOF'
@@ -269,7 +227,7 @@ clean:
 EOF
 ```
 
-### 7. Create Initial Feature File
+### 6. Create Initial Feature File
 
 ```bash
 cat > features/extract_company_data.feature << 'EOF'
@@ -308,7 +266,7 @@ Feature: Extract company data from websites
 EOF
 ```
 
-### 8. Create Component-Specific Git Configuration
+### 7. Create Component-Specific Git Configuration
 
 ```bash
 # Create .gitignore for crawler component
@@ -367,18 +325,15 @@ After setup, verify everything works:
 # Ensure you're in the crawler/ directory
 cd crawler/
 
-# Activate virtual environment
-source venv/bin/activate
-
 # Run quality checks
 make quality-check
 
 # Check that all tools are working
-black --check src/
-isort --check-only src/
-flake8 src/
-mypy src/
-behave --dry-run features/
+poetry run black --check src/
+poetry run isort --check-only src/
+poetry run flake8 src/
+poetry run mypy src/
+poetry run behave --dry-run features/
 ```
 
 ## Development Workflow
@@ -400,16 +355,15 @@ Once setup is complete, follow this workflow:
 python --version
 # Should be 3.11+
 
-# If wrong version, use specific Python
-python3.11 -m venv venv
+# If wrong version, specify Python version for Poetry
+poetry env use python3.11
 ```
 
-### Virtual Environment Issues
+### Poetry Environment Issues
 ```bash
-# Deactivate and recreate
-deactivate
-rm -rf venv/
-make install
+# Recreate Poetry environment
+poetry env remove --all
+poetry install
 ```
 
 ### Configuration Issues
@@ -418,20 +372,20 @@ make install
 make generate-configs
 
 # Test individual tools
-./venv/bin/black --check .
-./venv/bin/isort --check-only .
-./venv/bin/flake8 .
-./venv/bin/mypy src/
+poetry run black --check .
+poetry run isort --check-only .
+poetry run flake8 .
+poetry run mypy src/
 ```
 
 ### Pre-commit Issues
 ```bash
 # Reinstall pre-commit hooks
-./venv/bin/pre-commit uninstall
-./venv/bin/pre-commit install
+poetry run pre-commit uninstall
+poetry run pre-commit install
 
 # Test pre-commit
-./venv/bin/pre-commit run --all-files
+poetry run pre-commit run --all-files
 ```
 
 ## Next Steps

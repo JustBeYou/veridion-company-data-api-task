@@ -94,25 +94,24 @@ Feature: Extract company contact information
 ## Technical Requirements
 
 ### Core Dependencies (Install Latest)
-- Install programmatically and freeze in requirements.txt
-- Do not specify versions in initial installation commands
+- Install programmatically using Poetry
+- Do not specify exact versions unless required
 ```bash
-# Install latest versions, then freeze
-pip install scrapy behave requests lxml cssselect
-pip freeze > requirements.txt
+# Install dependencies using Poetry
+poetry add scrapy behave requests lxml cssselect
 ```
 
 ### Development Dependencies (Install Latest)
 ```bash
-# Install latest development tools, then freeze
-pip install black isort flake8 mypy pre-commit pytest coverage
-pip freeze > requirements-dev.txt
+# Install development tools using Poetry
+poetry add --group dev black isort flake8 mypy pre-commit pytest coverage
 ```
 
 ### Configuration Files
 - **MANDATORY**: Generate all config files using commands/tools
 - **NEVER** write config files manually to ensure determinism
-- Use tool-specific commands to generate: .flake8, mypy.ini, pyproject.toml, etc.
+- Use tool-specific commands to generate: .flake8, mypy.ini, etc.
+- Most configuration should be in pyproject.toml
 - Document the generation commands in setup scripts
 - MANDATORY for all functions, methods, and class attributes
 - Use strict mypy configuration
@@ -207,27 +206,21 @@ help:
 	@echo "  clean        - Clean build artifacts"
 
 install:
-	python -m venv venv
-	./venv/bin/pip install --upgrade pip
-	./venv/bin/pip install scrapy behave requests lxml cssselect
-	./venv/bin/pip freeze > requirements.txt
-	./venv/bin/pip install black isort flake8 mypy pre-commit pytest coverage
-	./venv/bin/pip freeze > requirements-dev.txt
-	./venv/bin/pre-commit install
+	poetry install
 
 test:
-	./venv/bin/behave features/
-	./venv/bin/pytest tests/
+	poetry run behave features/
+	poetry run pytest tests/
 
 lint:
-	./venv/bin/flake8 src/ tests/ features/
+	poetry run flake8 src/ tests/ features/
 
 format:
-	./venv/bin/black src/ tests/ features/
-	./venv/bin/isort src/ tests/ features/
+	poetry run black src/ tests/ features/
+	poetry run isort src/ tests/ features/
 
 type-check:
-	./venv/bin/mypy src/
+	poetry run mypy src/
 
 quality-check: format lint type-check test
 	@echo "All quality checks passed!"

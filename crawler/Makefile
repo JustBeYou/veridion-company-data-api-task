@@ -12,31 +12,27 @@ help:
 	@echo "  clean           - Clean build artifacts"
 
 install:
-	python -m venv venv
-	./venv/bin/pip install --upgrade pip
-	./venv/bin/pip install -r requirements.txt
-	./venv/bin/pip install -r requirements-dev.txt
-	./venv/bin/pre-commit install
+	poetry install
 
 test:
-	./venv/bin/behave features/
-	./venv/bin/pytest tests/
+	poetry run behave features/
+	poetry run pytest tests/
 
 lint:
-	./venv/bin/flake8 src/ tests/ features/
+	poetry run flake8 src/ tests/ features/
 
 format:
-	./venv/bin/black src/ tests/ features/
-	./venv/bin/isort src/ tests/ features/
+	poetry run black src/ tests/ features/
+	poetry run isort src/ tests/ features/
 
 type-check:
-	./venv/bin/mypy src/
+	poetry run mypy src/
 
 quality-check: format lint type-check test
 	@echo "All quality checks passed!"
 
 run:
-	./venv/bin/scrapy crawl company_spider
+	poetry run scrapy crawl company_spider
 
 clean:
 	rm -rf .pytest_cache/
