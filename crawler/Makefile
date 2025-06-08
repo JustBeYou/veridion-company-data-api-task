@@ -1,4 +1,4 @@
-.PHONY: help install test lint format type-check quality-check run clean
+.PHONY: help install test lint format type-check quality-check run clean pre-commit
 
 help:
 	@echo "Available commands:"
@@ -10,6 +10,7 @@ help:
 	@echo "  quality-check   - Run all quality checks"
 	@echo "  run             - Run crawler"
 	@echo "  clean           - Clean build artifacts"
+	@echo "  pre-commit      - Run pre-commit hooks"
 
 install:
 	poetry install
@@ -30,6 +31,9 @@ type-check:
 
 quality-check: format lint type-check test
 	@echo "All quality checks passed!"
+
+pre-commit:
+	poetry run pre-commit run
 
 run:
 	poetry run scrapy crawl company_spider
