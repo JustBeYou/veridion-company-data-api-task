@@ -3,9 +3,10 @@
 ## Project Overview
 This project creates a web crawler component to extract company data points (name, phone, social media links, address) from websites using Python 3, Scrapy, and following Acceptance Test Driven Development (ATDD) with Behavior Driven Development (BDD) principles.
 
-**IMPORTANT**: 
+**IMPORTANT**:
 - This crawler is one component of a larger multi-component project. All crawler-related code lives in the `crawler/` subfolder.
 - When executing commands, be aware of your current directory. If you're already in the crawler directory, don't use `cd crawler` again.
+- The command for using Python is `python3`.
 
 ## Core Principles
 
@@ -103,7 +104,7 @@ pip freeze > requirements.txt
 
 ### Development Dependencies (Install Latest)
 ```bash
-# Install latest development tools, then freeze  
+# Install latest development tools, then freeze
 pip install black isort flake8 mypy pylint pre-commit pytest coverage
 pip freeze > requirements-dev.txt
 ```
@@ -122,7 +123,7 @@ pip freeze > requirements-dev.txt
 ### Code Formatting
 - Use commands to generate formatting configs, never write manually
 - black with default settings (generate pyproject.toml via command)
-- isort with black compatibility (generate .isort.cfg via command)  
+- isort with black compatibility (generate .isort.cfg via command)
 - flake8 configuration generated via commands
 
 ## Scrapy Implementation Guidelines
@@ -243,7 +244,7 @@ quality-check: format lint type-check test
 
 ### 2. Code Generation Order
 1. Write/update `.feature` file in crawler/features/
-2. Run `behave` to see failing scenarios  
+2. Run `behave` to see failing scenarios
 3. Implement step definitions in crawler/features/steps/
 4. Write minimal production code in crawler/src/
 5. Run `make quality-check` from crawler/ directory

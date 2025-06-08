@@ -1,0 +1,16 @@
+[MASTER]
+disable=
+    C0111, # missing-docstring
+    W0613, # unused-argument
+    R0903, # too-few-public-methods
+
+[REPORTS]
+output-format=text
+reports=yes
+evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / statement) * 10)
+
+[SIMILARITIES]
+min-similarity-lines=4
+ignore-comments=yes
+ignore-docstrings=yes
+ignore-imports=yes

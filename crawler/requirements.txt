@@ -1,0 +1,5 @@
+scrapy
+behave
+requests
+lxml
+cssselect
