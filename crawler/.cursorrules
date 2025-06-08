@@ -3,7 +3,9 @@
 ## Project Overview
 This project creates a web crawler component to extract company data points (name, phone, social media links, address) from websites using Python 3, Scrapy, and following Acceptance Test Driven Development (ATDD) with Behavior Driven Development (BDD) principles.
 
-**IMPORTANT**: This crawler is one component of a larger multi-component project. All crawler-related code lives in the `crawler/` subfolder.
+**IMPORTANT**: 
+- This crawler is one component of a larger multi-component project. All crawler-related code lives in the `crawler/` subfolder.
+- When executing commands, be aware of your current directory. If you're already in the crawler directory, don't use `cd crawler` again.
 
 ## Core Principles
 
