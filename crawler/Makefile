@@ -19,15 +19,15 @@ install:
 	poetry install
 
 test:
-	poetry run behave features/
-	poetry run pytest tests/
+	poetry run pytest tests/unit
+	poetry run behave tests/acceptance/
 
 lint:
-	poetry run flake8 src/ tests/ features/
+	poetry run flake8 src/ tests/
 
 format:
-	poetry run black src/ tests/ features/
-	poetry run isort src/ tests/ features/
+	poetry run black src/ tests/
+	poetry run isort src/ tests/
 
 type-check:
 	poetry run mypy src/

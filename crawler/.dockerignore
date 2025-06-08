@@ -50,7 +50,6 @@ data/
 
 # Test files (not needed for production)
 tests/
-features/
 .coverage
 coverage.xml
 

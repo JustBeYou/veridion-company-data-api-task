@@ -44,9 +44,6 @@ project_root/
 │   │   ├── pipelines.py
 │   │   ├── settings.py
 │   │   └── middlewares.py
-│   ├── features/
-│   │   ├── steps/
-│   │   └── *.feature
 │   ├── tests/
 │   │   ├── unit/
 │   │   └── acceptance/
@@ -59,7 +56,7 @@ project_root/
 ## Development Workflow (STRICT ORDER)
 
 ### Step 1: Write Feature File
-- Start with `.feature` files in Gherkin syntax
+- Start with `.feature` files in Gherkin syntax in `tests/acceptance/features`
 - Define acceptance criteria as scenarios
 - Focus on business value and user behavior
 - Example structure:
@@ -76,7 +73,7 @@ Feature: Extract company contact information
 ```
 
 ### Step 2: Implement Step Definitions
-- Create step definitions in `features/steps/`
+- Create step definitions in `tests/acceptance/steps`
 - Use behave framework
 - Make tests fail initially (red phase)
 
@@ -209,15 +206,15 @@ install:
 	poetry install
 
 test:
-	poetry run behave features/
-	poetry run pytest tests/
+	poetry run pytest tests/unit
+	poetry run behave tests/acceptance
 
 lint:
-	poetry run flake8 src/ tests/ features/
+	poetry run flake8 src/ tests/
 
 format:
-	poetry run black src/ tests/ features/
-	poetry run isort src/ tests/ features/
+	poetry run black src/ tests/
+	poetry run isort src/ tests/
 
 type-check:
 	poetry run mypy src/
@@ -235,9 +232,9 @@ quality-check: format lint type-check test
 - **Work within the crawler/ subfolder for this component**
 
 ### 2. Code Generation Order
-1. Write/update `.feature` file in crawler/features/
+1. Write/update `.feature` file in crawler/tests/acceptance/features/
 2. Run `behave` to see failing scenarios
-3. Implement step definitions in crawler/features/steps/
+3. Implement step definitions in crawler/tests/acceptance/features/steps/
 4. Write minimal production code in crawler/src/
 5. Run `make quality-check` from crawler/ directory
 6. Refactor if needed

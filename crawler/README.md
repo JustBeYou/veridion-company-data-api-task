@@ -41,10 +41,10 @@ This project follows Acceptance Test Driven Development (ATDD) with Behavior Dri
 make test
 
 # Run only the behavior tests
-behave features/
+behave tests/acceptance/features/
 
 # Run only the unit tests
-python -m pytest tests/
+python -m pytest tests/unit
 ```
 
 ### Code Quality
@@ -69,9 +69,6 @@ make quality-check
 crawler/
 ├── configs/                   # Configuration files
 │   └── companies-domains.csv  # List of domains to crawl
-├── features/                  # BDD feature files
-│   ├── steps/                 # Step definitions
-│   └── *.feature              # Feature files
 ├── src/                       # Source code
 │   ├── spiders/               # Scrapy spiders
 │   ├── items.py               # Scrapy items
