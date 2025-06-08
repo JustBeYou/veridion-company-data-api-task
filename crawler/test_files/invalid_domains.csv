@@ -1,0 +1,7 @@
+domain
+example.com
+invalid-domain
+test.example.com
+example..com
+-invalid.com
+another-example.com

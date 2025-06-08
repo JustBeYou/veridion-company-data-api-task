@@ -31,8 +31,6 @@ project_root/
 ├── crawler/                    # THIS COMPONENT
 │   ├── .cursorrules
 │   ├── Makefile
-│   ├── requirements.txt
-│   ├── requirements-dev.txt
 │   ├── setup.py
 │   ├── .gitignore
 │   ├── .pre-commit-config.yaml
