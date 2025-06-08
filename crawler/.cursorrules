@@ -34,20 +34,33 @@ project_root/
 │   ├── setup.py
 │   ├── .gitignore
 │   ├── .pre-commit-config.yaml
-│   ├── mypy.ini
+│   ├── .pylintrc
 │   ├── .flake8
 │   ├── pyproject.toml
+│   ├── poetry.lock
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   ├── scrapy.cfg
+│   ├── configs/
+│   │   └── companies-domains.csv
+│   ├── data/
 │   ├── src/
 │   │   ├── __init__.py
 │   │   ├── spiders/
 │   │   ├── items.py
+│   │   ├── models.py
+│   │   ├── company_data_extractor.py
+│   │   ├── domain_loader.py
 │   │   ├── pipelines.py
 │   │   ├── settings.py
 │   │   └── middlewares.py
 │   ├── tests/
+│   │   ├── __init__.py
 │   │   ├── unit/
 │   │   └── acceptance/
-│   └── docs/
+│   │       ├── features/
+│   │       └── steps/
+│   └── test_files/
 ├── other_component_1/          # OTHER COMPONENTS
 ├── other_component_2/
 └── project_docs/
@@ -88,19 +101,25 @@ Feature: Extract company contact information
 
 ## Technical Requirements
 
-### Core Dependencies (Install Latest)
-- Install programmatically using Poetry
-- Do not specify exact versions unless required
-```bash
-# Install dependencies using Poetry
-poetry add scrapy behave requests lxml cssselect
-```
+### Core Dependencies
+- Managed using Poetry (pyproject.toml)
+- Core dependencies include:
+  - scrapy
+  - behave
+  - requests
+  - lxml
+  - cssselect
 
-### Development Dependencies (Install Latest)
-```bash
-# Install development tools using Poetry
-poetry add --group dev black isort flake8 mypy pre-commit pytest coverage
-```
+### Development Dependencies
+- Managed using Poetry dev group
+- Development tools include:
+  - black
+  - isort
+  - flake8
+  - mypy
+  - pre-commit
+  - pytest
+  - coverage
 
 ### Configuration Files
 - **MANDATORY**: Generate all config files using commands/tools

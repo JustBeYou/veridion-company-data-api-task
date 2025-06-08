@@ -13,11 +13,11 @@ A web crawler component to extract company data points (name, phone, social medi
 ## Installation
 
 ```bash
+# Install poetry (if not already installed)
+curl -sSL https://install.python-poetry.org | python3 -
+
 # Install dependencies
 make install
-
-# Install development dependencies
-make install-dev
 ```
 
 ## Usage
@@ -28,6 +28,9 @@ make run
 
 # Run the crawler with a specific URL
 make run-specific URL=https://example.com
+
+# Run the crawler using Docker
+make docker-run
 ```
 
 ## Development
@@ -41,10 +44,10 @@ This project follows Acceptance Test Driven Development (ATDD) with Behavior Dri
 make test
 
 # Run only the behavior tests
-behave tests/acceptance/features/
+poetry run behave tests/acceptance/features/
 
 # Run only the unit tests
-python -m pytest tests/unit
+poetry run pytest tests/unit
 ```
 
 ### Code Quality
@@ -69,15 +72,39 @@ make quality-check
 crawler/
 ├── configs/                   # Configuration files
 │   └── companies-domains.csv  # List of domains to crawl
+├── data/                      # Output data directory
 ├── src/                       # Source code
 │   ├── spiders/               # Scrapy spiders
 │   ├── items.py               # Scrapy items
+│   ├── models.py              # Data models
+│   ├── company_data_extractor.py # Data extraction logic
+│   ├── domain_loader.py       # Domain loading functionality
 │   ├── pipelines.py           # Scrapy pipelines
-│   └── settings.py            # Scrapy settings
+│   ├── settings.py            # Scrapy settings
+│   └── middlewares.py         # Scrapy middlewares
 ├── tests/                     # Tests
 │   ├── unit/                  # Unit tests
 │   └── acceptance/            # Acceptance tests
+│       ├── features/          # Gherkin feature files
+│       └── steps/             # Step definitions
+├── test_files/                # Test fixtures and data
+├── Dockerfile                 # Docker configuration
+├── pyproject.toml             # Poetry configuration
+├── poetry.lock                # Poetry lock file
 ├── Makefile                   # Make targets
+└── scrapy.cfg                 # Scrapy configuration
+```
+
+## Docker
+
+The project includes Docker support for containerized execution:
+
+```bash
+# Build the Docker image
+make docker-build
+
+# Run the crawler in Docker
+make docker-run
 ```
 
 ## License
