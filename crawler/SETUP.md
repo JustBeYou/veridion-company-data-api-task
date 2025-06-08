@@ -336,6 +336,27 @@ poetry run mypy src/
 poetry run behave --dry-run features/
 ```
 
+## Docker Setup
+
+The crawler can be deployed using Docker for easier distribution and isolation:
+
+```bash
+# Build the Docker image
+make docker-build
+
+# Run the crawler in a Docker container
+make docker-run
+
+# Run with custom parameters
+docker run --rm company-crawler scrapy crawl company_spider -a target_url=https://example.com
+```
+
+The Dockerfile uses a multi-stage build process to create a minimal production image:
+1. First stage installs Poetry and dependencies
+2. Second stage only includes the necessary runtime components
+3. Uses a non-root user for better security
+4. Optimizes layer caching for faster builds
+
 ## Development Workflow
 
 Once setup is complete, follow this workflow:

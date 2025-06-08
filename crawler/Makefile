@@ -1,4 +1,4 @@
-.PHONY: help install test lint format type-check quality-check run clean pre-commit
+.PHONY: help install test lint format type-check quality-check run clean pre-commit docker-build docker-run docker-run-with-output
 
 help:
 	@echo "Available commands:"
@@ -11,6 +11,9 @@ help:
 	@echo "  run             - Run crawler"
 	@echo "  clean           - Clean build artifacts"
 	@echo "  pre-commit      - Run pre-commit hooks"
+	@echo "  docker-build    - Build Docker image"
+	@echo "  docker-run      - Run crawler in Docker container"
+	@echo "  docker-run-with-output - Run crawler and save output to data/results.json"
 
 install:
 	poetry install
@@ -44,3 +47,18 @@ clean:
 	rm -rf *.egg-info/
 	find . -name "*.pyc" -delete
 	find . -name "__pycache__" -delete
+
+docker-build:
+	docker build -t company-crawler .
+
+docker-run:
+	@echo "Running crawler with default example.com target..."
+	docker run --rm company-crawler crawl company_spider
+
+	# Create directory for output data if it doesn't exist
+	mkdir -p data
+
+docker-run-with-output:
+	@echo "Running crawler and saving output to data/results.json..."
+	mkdir -p data
+	docker run --rm -v $(PWD)/data:/app/data company-crawler crawl company_spider -o /app/data/results.json

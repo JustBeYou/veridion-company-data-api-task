@@ -204,6 +204,8 @@ help:
 	@echo "  quality-check - Run all quality checks"
 	@echo "  run          - Run crawler"
 	@echo "  clean        - Clean build artifacts"
+	@echo "  docker-build - Build Docker image"
+	@echo "  docker-run   - Run crawler in Docker container"
 
 install:
 	poetry install
@@ -317,5 +319,27 @@ class JSRenderer(PageRenderer):
 - Extensible architecture for JS pages
 - Clean, maintainable, well-documented code
 - Robust error handling and logging
+- Docker image builds and runs successfully
 
 Remember: **Test-first, quality-first, no exceptions! Work within crawler/ subfolder for this component.**
+
+## Docker Deployment
+
+Docker provides an easy way to deploy and run the crawler in any environment:
+
+```bash
+# Build the Docker image
+make docker-build
+
+# Run the crawler
+make docker-run
+
+# Run with custom parameters
+docker run --rm company-crawler scrapy crawl company_spider -a target_url=https://example.com
+```
+
+The Dockerfile follows best practices:
+- Multi-stage build for minimal image size
+- Security hardening with non-root user
+- Layer optimization for faster builds
+- Environment variable configuration

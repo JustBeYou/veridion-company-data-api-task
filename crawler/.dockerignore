@@ -1,0 +1,64 @@
+# Version control
+.git
+.gitignore
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Type checking caches
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Build artifacts
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# IDE settings
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Scrapy stuff
+.scrapy
+
+# Logs
+logs/
+*.log
+
+# Data
+data/
+
+# Local development files
+.python-version
+.DS_Store
+
+# Test files (not needed for production)
+tests/
+features/
+.coverage
+coverage.xml
+
+# Docker related
+Dockerfile
+.dockerignore
+
+# Documentation
+docs/
+*.md
+!README.md

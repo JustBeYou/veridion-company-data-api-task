@@ -20,6 +20,30 @@ This is a web crawler component for extracting company data points (name, phone,
    poetry install
    ```
 
+## Docker Deployment
+
+You can easily deploy the crawler using Docker:
+
+1. Build the Docker image:
+   ```bash
+   make docker-build
+   ```
+
+2. Run the crawler with a specific target URL:
+   ```bash
+   docker run --rm company-crawler crawl company_spider -a target_url=https://example.com
+   ```
+
+3. Run with output saved to a JSON file:
+   ```bash
+   docker run --rm -v $(pwd)/data:/app/data company-crawler crawl company_spider -a target_url=https://example.com -o /app/data/results.json
+   ```
+
+4. Or use the simplified make command:
+   ```bash
+   make docker-run
+   ```
+
 ## Running Tests
 
 To run all tests and quality checks:
