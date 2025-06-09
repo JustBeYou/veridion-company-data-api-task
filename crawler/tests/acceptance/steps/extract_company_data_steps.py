@@ -1,6 +1,6 @@
 from behave import given, then, when
 
-from src.company_data_extractor import CompanyDataExtractor
+from src.company_data.company_data_extractor import CompanyDataExtractor
 
 
 @given("the target website is accessible")

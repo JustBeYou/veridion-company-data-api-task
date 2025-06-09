@@ -11,13 +11,13 @@ SPIDER_MODULES = ["src.spiders"]
 NEWSPIDER_MODULE = "src.spiders"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy
 CONCURRENT_REQUESTS = 16
 
 # Configure a delay for requests for the same website
-DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 0.1
 
 # Enable and configure the AutoThrottle extension
 AUTOTHROTTLE_ENABLED = True

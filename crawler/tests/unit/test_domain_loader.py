@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from typing import List
 
-from src.domain_loader import DomainLoader
+from src.company_data.domain_loader import DomainLoader
 
 
 class TestDomainLoader(unittest.TestCase):

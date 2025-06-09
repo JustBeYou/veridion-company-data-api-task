@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 
 import lxml.html
 
-from src.models import CompanyData
+from src.company_data.models import CompanyData
 
 
 class CompanyDataExtractor:

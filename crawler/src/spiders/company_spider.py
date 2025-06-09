@@ -9,9 +9,9 @@ from typing import Any, Dict, Iterator, List, Optional, Union
 import scrapy
 from scrapy.http import Response
 
-from src.company_data_extractor import CompanyDataExtractor
-from src.domain_loader import DomainLoader
-from src.items import CompanyItem
+from src.company_data.company_data_extractor import CompanyDataExtractor
+from src.company_data.domain_loader import DomainLoader
+from src.company_data.items import CompanyItem
 
 
 class CompanySpider(scrapy.Spider):

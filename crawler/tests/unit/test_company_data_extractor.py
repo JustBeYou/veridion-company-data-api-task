@@ -6,7 +6,7 @@ import unittest
 
 import lxml.html
 
-from src.company_data_extractor import CompanyDataExtractor
+from src.company_data.company_data_extractor import CompanyDataExtractor
 
 
 class TestCompanyDataExtractor(unittest.TestCase):
