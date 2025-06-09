@@ -39,7 +39,7 @@ pre-commit:
 	poetry run pre-commit run
 
 run:
-	poetry run scrapy crawl company_spider
+	poetry run scrapy crawl company_spider -a domain_limit=10 -o data/results.json
 
 clean:
 	rm -rf .pytest_cache/

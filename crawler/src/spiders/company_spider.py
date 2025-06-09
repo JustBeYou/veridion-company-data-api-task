@@ -23,7 +23,7 @@ class CompanySpider(scrapy.Spider):
     def __init__(
         self,
         domains_file: str = "configs/companies-domains.csv",
-        target_url: Optional[str] = None,
+        domain_limit: Optional[int | str] = None,
         *args: Any,
         **kwargs: Any,
     ) -> None:
@@ -32,30 +32,31 @@ class CompanySpider(scrapy.Spider):
 
         Args:
             domains_file: Path to the CSV file with domains
-            target_url: Optional specific URL to crawl
+            domain_limit: Limit the number of domains to crawl
             *args: Additional arguments
             **kwargs: Additional keyword arguments
         """
         super().__init__(*args, **kwargs)
+
+        self.logger.info(f"Initializing spider with domains file: {domains_file}")
+        self.logger.info(f"Initializing spider with domain limit: {domain_limit}")
+
         self.extractor = CompanyDataExtractor()
 
-        if target_url:
-            self.start_urls = [target_url]
-            self.logger.info(f"Starting spider with URL: {target_url}")
-        else:
-            # Load domains from CSV
-            self.domain_loader = DomainLoader()
-            self.domains = self.domain_loader.load_domains(domains_file)
+        self.domain_loader = DomainLoader()
+        self.domains = self.domain_loader.load_domains(domains_file)
 
-            if not self.domains:
-                self.logger.error(f"No valid domains found in {domains_file}")
-                self.start_urls = ["https://example.com"]  # Fallback
-            else:
-                self.start_urls = [f"https://{domain}" for domain in self.domains]
-                self.logger.info(f"Loaded {len(self.domains)} domains")
+        if not self.domains:
+            raise ValueError(f"No valid domains found in {domains_file}")
 
-                # Set allowed domains
-                self.allowed_domains = self.domains.copy()
+        if domain_limit:
+            self.domains = self.domains[: int(domain_limit)]
+
+        self.start_urls = [f"https://{domain}" for domain in self.domains]
+        self.logger.info(f"Loaded {len(self.domains)} domains")
+
+        # Set allowed domains
+        self.allowed_domains = self.domains.copy()
 
     def parse(
         self, response: Response
