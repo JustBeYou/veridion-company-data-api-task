@@ -65,5 +65,4 @@ RUN chown -R appuser:appuser /app
 USER appuser
 
 # Command to run the crawler
-ENTRYPOINT ["scrapy"]
-CMD ["crawl", "company_spider"]
+ENTRYPOINT ["python3", "src/crawler.py"]

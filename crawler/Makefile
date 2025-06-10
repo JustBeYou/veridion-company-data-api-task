@@ -13,7 +13,7 @@ help:
 	@echo "  pre-commit      - Run pre-commit hooks"
 	@echo "  docker-build    - Build Docker image"
 	@echo "  docker-run      - Run crawler in Docker container"
-	@echo "  docker-run-with-output - Run crawler and save output to data/results.json"
+	@echo "  docker-run-with-output - Run crawler and save output to data/"
 
 install:
 	poetry install
@@ -39,7 +39,7 @@ pre-commit:
 	poetry run pre-commit run
 
 run:
-	poetry run scrapy crawl company_spider -a domain_limit=10 -o data/results.json
+	poetry run python3 src/crawler.py
 
 clean:
 	rm -rf .pytest_cache/
@@ -52,13 +52,9 @@ docker-build:
 	docker build -t company-crawler .
 
 docker-run:
-	@echo "Running crawler with default example.com target..."
-	docker run --rm company-crawler crawl company_spider
-
-	# Create directory for output data if it doesn't exist
 	mkdir -p data
+	docker run --rm company-crawler
 
 docker-run-with-output:
-	@echo "Running crawler and saving output to data/results.json..."
 	mkdir -p data
-	docker run --rm -v $(PWD)/data:/app/data company-crawler crawl company_spider -o /app/data/results.json
+	docker run --rm -v $(PWD)/data:/app/data
