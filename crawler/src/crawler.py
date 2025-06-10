@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def run_crawler(
-    domains_file: str = "configs/companies-domains.csv", domain_limit: int = 5
+    domains_file: str = "configs/companies-domains.csv", domain_limit: int = 50
 ) -> str:
     """
     Run the web crawler and generate comprehensive statistics.
@@ -25,7 +25,10 @@ def run_crawler(
     Returns:
         Path to the main output file
     """
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    start_time = datetime.now()
+    logger.info(f"Starting crawler at {start_time.isoformat()}")
+
+    timestamp = start_time.strftime("%Y%m%d_%H%M%S")
     output_filename = f"data/companies_{timestamp}.json"
 
     settings = get_project_settings()
@@ -46,7 +49,15 @@ def run_crawler(
     )
     process.start()
 
-    stats = compute_crawling_statistics(output_filename, domains_file, domain_limit)
+    end_time = datetime.now()
+    running_time = (end_time - start_time).total_seconds()
+    logger.info(
+        f"Crawler finished at {end_time.isoformat()}. Running time: {running_time:.2f} seconds"
+    )
+
+    stats = compute_crawling_statistics(
+        output_filename, domains_file, domain_limit, start_time, end_time, running_time
+    )
     save_statistics_to_file(stats, output_filename)
 
     return output_filename

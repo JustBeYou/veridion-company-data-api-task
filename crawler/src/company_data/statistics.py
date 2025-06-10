@@ -20,6 +20,9 @@ def compute_crawling_statistics(
     output_filename: str,
     domains_file: str = "configs/companies-domains.csv",
     domain_limit: Optional[int] = None,
+    start_time: Optional[datetime] = None,
+    end_time: Optional[datetime] = None,
+    running_time_seconds: Optional[float] = None,
 ) -> Dict[str, Any]:
     """
     Compute comprehensive statistics from crawler output files.
@@ -28,6 +31,9 @@ def compute_crawling_statistics(
         output_filename: Path to the main crawler output JSON file
         domains_file: Path to CSV file containing domains to crawl
         domain_limit: Maximum number of domains that were processed
+        start_time: When the crawler started
+        end_time: When the crawler finished
+        running_time_seconds: Total running time in seconds
 
     Returns:
         Dictionary containing all computed statistics
@@ -66,12 +72,34 @@ def compute_crawling_statistics(
         }
     )
 
+    # Prepare metadata with timing information
+    metadata = {
+        "computation_timestamp": datetime.now().isoformat(),
+        "output_file": output_filename,
+        "total_records": len(company_data),
+    }
+
+    # Add timing information if available
+    if start_time:
+        metadata["start_time"] = start_time.isoformat()
+    if end_time:
+        metadata["end_time"] = end_time.isoformat()
+    if running_time_seconds is not None:
+        metadata["running_time_seconds"] = round(running_time_seconds, 2)
+        # Add human-readable duration
+        hours, remainder = divmod(running_time_seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        if hours > 0:
+            metadata["running_time_formatted"] = (
+                f"{int(hours)}h {int(minutes)}m {int(seconds)}s"
+            )
+        elif minutes > 0:
+            metadata["running_time_formatted"] = f"{int(minutes)}m {int(seconds)}s"
+        else:
+            metadata["running_time_formatted"] = f"{running_time_seconds:.1f}s"
+
     return {
-        "metadata": {
-            "computation_timestamp": datetime.now().isoformat(),
-            "output_file": output_filename,
-            "total_records": len(company_data),
-        },
+        "metadata": metadata,
         "domain_statistics": {
             "total_domains_attempted": total_input_domains,
             "domains_successfully_scraped": len(successful_domains),

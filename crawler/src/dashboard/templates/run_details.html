@@ -26,6 +26,24 @@
                 <span class="text-gray-600">Computation Time:</span>
                 <span class="font-medium">{{ stats.metadata.computation_timestamp }}</span>
             </div>
+            {% if stats.metadata.start_time %}
+            <div class="flex justify-between">
+                <span class="text-gray-600">Started:</span>
+                <span class="font-medium">{{ stats.metadata.start_time }}</span>
+            </div>
+            {% endif %}
+            {% if stats.metadata.end_time %}
+            <div class="flex justify-between">
+                <span class="text-gray-600">Finished:</span>
+                <span class="font-medium">{{ stats.metadata.end_time }}</span>
+            </div>
+            {% endif %}
+            {% if stats.metadata.running_time_formatted %}
+            <div class="flex justify-between">
+                <span class="text-gray-600">Running Time:</span>
+                <span class="font-medium text-green-600">{{ stats.metadata.running_time_formatted }}</span>
+            </div>
+            {% endif %}
             <div class="flex justify-between">
                 <span class="text-gray-600">Total Records:</span>
                 <span class="font-medium">{{ stats.metadata.total_records }}</span>

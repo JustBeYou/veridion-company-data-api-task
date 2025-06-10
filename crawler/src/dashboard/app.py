@@ -71,5 +71,11 @@ def run_details(filename: str) -> Union[str, Tuple[str, int]]:
         return "Stats file not found", 404
 
 
+@app.route("/health")
+def health_check() -> Dict[str, str]:
+    """Health check endpoint for monitoring and load balancers."""
+    return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)

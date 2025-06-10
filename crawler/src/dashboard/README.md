@@ -45,13 +45,14 @@ The dashboard will be available at: http://localhost:5000
 - Each card displays:
   - Run date and time
   - Number of companies processed
+  - Running time with performance indicator (fast: green, medium: yellow, slow: red)
   - Success rates with color coding (green: good, yellow: fair, red: poor)
   - Data fill rates for names, phones, social media, and addresses
   - Domain statistics
 
 #### Run Details (`/run/<filename>`)
 - Comprehensive view of a specific crawler run
-- Overview section with computation timestamp and output file
+- Overview section with computation timestamp, start/end times, and running duration
 - Visual progress bars for success rates
 - Detailed breakdown of domain and page statistics
 - Data fill rates with color-coded progress indicators
@@ -64,6 +65,10 @@ The dashboard expects stats files in the following format:
 {
   "metadata": {
     "computation_timestamp": "2025-06-10T18:36:55.673407",
+    "start_time": "2025-06-10T18:36:42.123456",
+    "end_time": "2025-06-10T18:36:55.673407",
+    "running_time_seconds": 13.55,
+    "running_time_formatted": "13.6s",
     "output_file": "data/companies_20250610_183642.json",
     "total_records": 5
   },

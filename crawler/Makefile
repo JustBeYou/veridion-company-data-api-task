@@ -1,4 +1,4 @@
-.PHONY: help install test lint format type-check quality-check run run-dashboard clean pre-commit docker-build docker-run docker-run-with-output
+.PHONY: help install test lint format type-check quality-check run clean pre-commit docker-build-crawler docker-run-crawler docker-run-with-output-crawler docker-build-dashboard docker-run-dashboard
 
 help:
 	@echo "Available commands:"
@@ -8,13 +8,15 @@ help:
 	@echo "  format          - Format code"
 	@echo "  type-check      - Run type checking"
 	@echo "  quality-check   - Run all quality checks"
-	@echo "  run             - Run crawler"
-	@echo "  run-dashboard   - Run Flask dashboard"
+	@echo "  run-crawler     - Run crawler"
+	@echo "  run-dashboard   - Run dashboard"
 	@echo "  clean           - Clean build artifacts"
 	@echo "  pre-commit      - Run pre-commit hooks"
-	@echo "  docker-build    - Build Docker image"
-	@echo "  docker-run      - Run crawler in Docker container"
-	@echo "  docker-run-with-output - Run crawler and save output to data/"
+	@echo "  docker-build-crawler    - Build Docker image"
+	@echo "  docker-run-crawler      - Run crawler in Docker container"
+	@echo "  docker-run-with-output-crawler - Run crawler and save output to data/"
+	@echo "  docker-build-dashboard    - Build Docker image"
+	@echo "  docker-run-dashboard      - Run dashboard in Docker container"
 	@echo "  clean-data        - Clean data directory"
 
 install:
@@ -40,11 +42,10 @@ quality-check: format lint type-check test
 pre-commit:
 	poetry run pre-commit run
 
-run:
+run-crawler:
 	poetry run python3 src/crawler.py
 
 run-dashboard:
-	@echo "Starting Flask dashboard at http://localhost:5000"
 	poetry run python3 src/dashboard/app.py
 
 clean:
@@ -57,13 +58,19 @@ clean:
 clean-data:
 	rm -rf data/*
 
-docker-build:
-	docker build -t company-crawler .
+docker-build-crawler:
+	docker build -t company-crawler . -f Dockerfile.crawler
 
-docker-run:
+docker-run-crawler:
 	mkdir -p data
 	docker run --rm company-crawler
 
-docker-run-with-output:
+docker-run-with-output-crawler:
 	mkdir -p data
-	docker run --rm -v $(PWD)/data:/app/data
+	docker run --rm -v $(PWD)/data:/app/data company-crawler
+
+docker-build-dashboard:
+	docker build -t company-crawler-dashboard . -f Dockerfile.dashboard
+
+docker-run-dashboard:
+	docker run -p 5000:5000 -v $(PWD)/data:/app/data --rm company-crawler-dashboard
