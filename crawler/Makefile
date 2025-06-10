@@ -1,4 +1,4 @@
-.PHONY: help install test lint format type-check quality-check run clean pre-commit docker-build docker-run docker-run-with-output
+.PHONY: help install test lint format type-check quality-check run run-dashboard clean pre-commit docker-build docker-run docker-run-with-output
 
 help:
 	@echo "Available commands:"
@@ -9,11 +9,13 @@ help:
 	@echo "  type-check      - Run type checking"
 	@echo "  quality-check   - Run all quality checks"
 	@echo "  run             - Run crawler"
+	@echo "  run-dashboard   - Run Flask dashboard"
 	@echo "  clean           - Clean build artifacts"
 	@echo "  pre-commit      - Run pre-commit hooks"
 	@echo "  docker-build    - Build Docker image"
 	@echo "  docker-run      - Run crawler in Docker container"
 	@echo "  docker-run-with-output - Run crawler and save output to data/"
+	@echo "  clean-data        - Clean data directory"
 
 install:
 	poetry install
@@ -41,12 +43,19 @@ pre-commit:
 run:
 	poetry run python3 src/crawler.py
 
+run-dashboard:
+	@echo "Starting Flask dashboard at http://localhost:5000"
+	poetry run python3 src/dashboard/app.py
+
 clean:
 	rm -rf .pytest_cache/
 	rm -rf __pycache__/
 	rm -rf *.egg-info/
 	find . -name "*.pyc" -delete
 	find . -name "__pycache__" -delete
+
+clean-data:
+	rm -rf data/*
 
 docker-build:
 	docker build -t company-crawler .

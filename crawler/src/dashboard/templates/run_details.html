@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}Crawler Run Details - {{ stats.file_timestamp.strftime('%B %d, %Y') if stats.file_timestamp else
+'Unknown Date' }}{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <div class="flex items-center space-x-4">
+        <a href="{{ url_for('dashboard') }}" class="inline-flex items-center text-primary hover:text-blue-700">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Back to Dashboard
+        </a>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-900 mt-4">Crawler Run Details</h1>
+    <p class="text-gray-600 mt-2">{{ filename }}</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Overview Card -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Overview</h2>
+        <div class="space-y-3">
+            <div class="flex justify-between">
+                <span class="text-gray-600">Computation Time:</span>
+                <span class="font-medium">{{ stats.metadata.computation_timestamp }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-600">Total Records:</span>
+                <span class="font-medium">{{ stats.metadata.total_records }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-600">Output File:</span>
+                <span class="font-medium text-sm">{{ stats.metadata.output_file }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Rates Card -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Success Rates</h2>
+        <div class="space-y-4">
+            <div>
+                <div class="flex justify-between mb-2">
+                    <span class="text-gray-600">Domain Success Rate</span>
+                    <span
+                        class="font-bold {% if stats.success_rates.domain_success_rate >= 70 %}text-green-600{% elif stats.success_rates.domain_success_rate >= 50 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                        {{ "%.1f"|format(stats.success_rates.domain_success_rate) }}%
+                    </span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="{% if stats.success_rates.domain_success_rate >= 70 %}bg-green-600{% elif stats.success_rates.domain_success_rate >= 50 %}bg-yellow-600{% else %}bg-red-600{% endif %} h-2 rounded-full"
+                        style="width: {{ stats.success_rates.domain_success_rate }}%"></div>
+                </div>
+            </div>
+            <div>
+                <div class="flex justify-between mb-2">
+                    <span class="text-gray-600">Page Success Rate</span>
+                    <span
+                        class="font-bold {% if stats.success_rates.page_success_rate >= 90 %}text-green-600{% elif stats.success_rates.page_success_rate >= 70 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                        {{ "%.1f"|format(stats.success_rates.page_success_rate) }}%
+                    </span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="{% if stats.success_rates.page_success_rate >= 90 %}bg-green-600{% elif stats.success_rates.page_success_rate >= 70 %}bg-yellow-600{% else %}bg-red-600{% endif %} h-2 rounded-full"
+                        style="width: {{ stats.success_rates.page_success_rate }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Domain Statistics Card -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Domain Statistics</h2>
+        <div class="space-y-3">
+            <div class="flex justify-between">
+                <span class="text-gray-600">Total Domains Attempted:</span>
+                <span class="font-medium">{{ stats.domain_statistics.total_domains_attempted }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-600">Successfully Scraped:</span>
+                <span class="font-medium text-green-600">{{ stats.domain_statistics.domains_successfully_scraped
+                    }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-600">Failed:</span>
+                <span class="font-medium text-red-600">{{ stats.domain_statistics.total_domains_attempted -
+                    stats.domain_statistics.domains_successfully_scraped }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Statistics Card -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Page Statistics</h2>
+        <div class="space-y-3">
+            <div class="flex justify-between">
+                <span class="text-gray-600">Total Pages Attempted:</span>
+                <span class="font-medium">{{ stats.page_statistics.total_pages_attempted }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-600">Successfully Scraped:</span>
+                <span class="font-medium text-green-600">{{ stats.page_statistics.pages_successfully_scraped }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-600">Failed:</span>
+                <span class="font-medium text-red-600">{{ stats.page_statistics.total_pages_attempted -
+                    stats.page_statistics.pages_successfully_scraped }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Fill Rates Section -->
+<div class="mt-8">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">Data Fill Rates</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="text-center">
+                <div
+                    class="text-3xl font-bold {% if stats.data_fill_rates.name >= 80 %}text-green-600{% elif stats.data_fill_rates.name >= 50 %}text-yellow-600{% else %}text-red-600{% endif %} mb-2">
+                    {{ "%.1f"|format(stats.data_fill_rates.name) }}%
+                </div>
+                <div class="text-gray-600 text-sm">Company Names</div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div class="{% if stats.data_fill_rates.name >= 80 %}bg-green-600{% elif stats.data_fill_rates.name >= 50 %}bg-yellow-600{% else %}bg-red-600{% endif %} h-2 rounded-full"
+                        style="width: {{ stats.data_fill_rates.name }}%"></div>
+                </div>
+            </div>
+            <div class="text-center">
+                <div
+                    class="text-3xl font-bold {% if stats.data_fill_rates.phone >= 80 %}text-green-600{% elif stats.data_fill_rates.phone >= 50 %}text-yellow-600{% else %}text-red-600{% endif %} mb-2">
+                    {{ "%.1f"|format(stats.data_fill_rates.phone) }}%
+                </div>
+                <div class="text-gray-600 text-sm">Phone Numbers</div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div class="{% if stats.data_fill_rates.phone >= 80 %}bg-green-600{% elif stats.data_fill_rates.phone >= 50 %}bg-yellow-600{% else %}bg-red-600{% endif %} h-2 rounded-full"
+                        style="width: {{ stats.data_fill_rates.phone }}%"></div>
+                </div>
+            </div>
+            <div class="text-center">
+                <div
+                    class="text-3xl font-bold {% if stats.data_fill_rates.social_media >= 80 %}text-green-600{% elif stats.data_fill_rates.social_media >= 50 %}text-yellow-600{% else %}text-red-600{% endif %} mb-2">
+                    {{ "%.1f"|format(stats.data_fill_rates.social_media) }}%
+                </div>
+                <div class="text-gray-600 text-sm">Social Media</div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div class="{% if stats.data_fill_rates.social_media >= 80 %}bg-green-600{% elif stats.data_fill_rates.social_media >= 50 %}bg-yellow-600{% else %}bg-red-600{% endif %} h-2 rounded-full"
+                        style="width: {{ stats.data_fill_rates.social_media }}%"></div>
+                </div>
+            </div>
+            <div class="text-center">
+                <div
+                    class="text-3xl font-bold {% if stats.data_fill_rates.address >= 80 %}text-green-600{% elif stats.data_fill_rates.address >= 50 %}text-yellow-600{% else %}text-red-600{% endif %} mb-2">
+                    {{ "%.1f"|format(stats.data_fill_rates.address) }}%
+                </div>
+                <div class="text-gray-600 text-sm">Addresses</div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div class="{% if stats.data_fill_rates.address >= 80 %}bg-green-600{% elif stats.data_fill_rates.address >= 50 %}bg-yellow-600{% else %}bg-red-600{% endif %} h-2 rounded-full"
+                        style="width: {{ stats.data_fill_rates.address }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Page Type Analysis -->
+{% if stats.page_type_analysis %}
+<div class="mt-8">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Page Type Analysis</h2>
+        <div class="space-y-3">
+            {% if stats.page_type_analysis.domains_with_contact_page %}
+            <div class="flex justify-between">
+                <span class="text-gray-600">Domains with Contact Pages:</span>
+                <span class="font-medium">{{ stats.page_type_analysis.domains_with_contact_page }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

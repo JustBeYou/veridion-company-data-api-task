@@ -6,12 +6,22 @@ This module provides functionality to extract company data from HTML content.
 
 import logging
 import re
+from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set
 from urllib.parse import urlparse
 
 import lxml.html
 
-from src.company_data.models import CompanyData
+
+@dataclass
+class CompanyData:
+    """Class for storing company data extracted from websites."""
+
+    url: str
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    social_media: List[str] = field(default_factory=list)
+    address: Optional[str] = None
 
 
 class CompanyDataExtractor:
@@ -44,22 +54,13 @@ class CompanyDataExtractor:
         company_data = CompanyData(url=url)
 
         try:
-            # Parse HTML
             html = lxml.html.fromstring(html_content)
 
-            # Extract company name
             company_data.name = self.extract_company_name(html)
-
-            # Extract phone number
             company_data.phone = self.extract_phone(html)
-
-            # Extract social media links
             company_data.social_media = self.extract_social_media(html)
-
-            # Extract address
             company_data.address = self.extract_address(html)
 
-            # Store the extracted data
             self.extracted_data[url] = company_data
 
         except Exception as e:

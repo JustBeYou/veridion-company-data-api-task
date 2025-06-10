@@ -17,7 +17,6 @@ def step_given_crawler_configured_for_5_domains(context) -> None:
 @when("I run the spider end-to-end")
 def step_when_run_spider_end_to_end(context) -> None:
     """Run the complete spider pipeline."""
-    # Run the crawler with domain limit
     context.output_file = run_crawler(
         domains_file=context.domains_file, domain_limit=context.domain_limit
     )
@@ -50,7 +49,14 @@ def step_then_json_contains_5_records(context) -> None:
 @then("each record should have the required company data fields")
 def step_then_records_have_required_fields(context) -> None:
     """Verify each record has the required company data fields."""
-    required_fields = ["name", "phone", "social_media", "address"]
+    required_fields = [
+        "name",
+        "phone",
+        "social_media",
+        "address",
+        "domain",
+        "page_type",
+    ]
 
     for i, record in enumerate(context.company_records):
         assert isinstance(record, dict), f"Record {i} should be a dictionary"

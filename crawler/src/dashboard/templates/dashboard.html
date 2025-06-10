@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Crawler Dashboard{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Crawler Dashboard</h1>
+    <p class="text-gray-600 mt-2">Monitor your web crawler runs and statistics</p>
+</div>
+
+{% if crawler_runs %}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for run in crawler_runs %}
+    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+        <!-- Card Header -->
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    {{ run.file_timestamp.strftime('%B %d, %Y') }}
+                </h3>
+                <span class="text-sm text-gray-500">
+                    {{ run.file_timestamp.strftime('%I:%M %p') }}
+                </span>
+            </div>
+            <p class="text-sm text-gray-600 mt-1">
+                {{ run.metadata.total_records }} companies processed
+            </p>
+        </div>
+
+        <!-- Card Body -->
+        <div class="p-6">
+            <!-- Success Rates -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="text-center">
+                    <div
+                        class="text-2xl font-bold {% if run.success_rates.domain_success_rate >= 70 %}text-green-600{% elif run.success_rates.domain_success_rate >= 50 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                        {{ "%.0f"|format(run.success_rates.domain_success_rate) }}%
+                    </div>
+                    <div class="text-xs text-gray-500">Domain Success</div>
+                </div>
+                <div class="text-center">
+                    <div
+                        class="text-2xl font-bold {% if run.success_rates.page_success_rate >= 90 %}text-green-600{% elif run.success_rates.page_success_rate >= 70 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                        {{ "%.0f"|format(run.success_rates.page_success_rate) }}%
+                    </div>
+                    <div class="text-xs text-gray-500">Page Success</div>
+                </div>
+            </div>
+
+            <!-- Data Fill Rates -->
+            <div class="space-y-2 mb-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Company Names</span>
+                    <span class="text-sm font-medium">{{ "%.0f"|format(run.data_fill_rates.name) }}%</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Phone Numbers</span>
+                    <span class="text-sm font-medium">{{ "%.0f"|format(run.data_fill_rates.phone) }}%</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Social Media</span>
+                    <span class="text-sm font-medium">{{ "%.0f"|format(run.data_fill_rates.social_media) }}%</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Addresses</span>
+                    <span class="text-sm font-medium">{{ "%.0f"|format(run.data_fill_rates.address) }}%</span>
+                </div>
+            </div>
+
+            <!-- Domain Statistics -->
+            <div class="bg-gray-50 rounded-lg p-3 mb-4">
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Domains Attempted:</span>
+                    <span class="font-medium">{{ run.domain_statistics.total_domains_attempted }}</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Successfully Scraped:</span>
+                    <span class="font-medium">{{ run.domain_statistics.domains_successfully_scraped }}</span>
+                </div>
+                {% if run.page_type_analysis.domains_with_contact_page %}
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">With Contact Pages:</span>
+                    <span class="font-medium">{{ run.page_type_analysis.domains_with_contact_page }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- View Details Button -->
+            <a href="{{ url_for('run_details', filename=run.filename) }}"
+                class="block w-full text-center bg-primary text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200">
+                View Details
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-12">
+    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">No crawler runs found</h3>
+    <p class="mt-1 text-sm text-gray-500">Start by running the crawler to see statistics here.</p>
+</div>
+{% endif %}
+{% endblock %}

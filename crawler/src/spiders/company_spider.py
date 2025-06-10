@@ -5,13 +5,14 @@ This module defines a Scrapy spider for crawling company websites.
 """
 
 from typing import Any, Dict, Iterator, List, Optional, Union
+from urllib.parse import urlparse
 
 import scrapy
 from scrapy.http import Response
 
 from src.company_data.company_data_extractor import CompanyDataExtractor
 from src.company_data.domain_loader import DomainLoader
-from src.company_data.items import CompanyItem
+from src.company_data.items import CompanyItem, PageType
 
 
 class CompanySpider(scrapy.Spider):
@@ -60,7 +61,7 @@ class CompanySpider(scrapy.Spider):
 
     def parse(
         self, response: Response
-    ) -> Iterator[Union[Dict[str, Any], scrapy.Request]]:
+    ) -> Iterator[Union[Dict[str, Any], CompanyItem, scrapy.Request]]:
         """
         Parse response and extract company data.
 
@@ -72,30 +73,37 @@ class CompanySpider(scrapy.Spider):
         """
         self.logger.info(f"Crawling: {response.url}")
 
-        try:
-            # Extract company data using our extractor
-            html_content = response.text
-            company_data = self.extractor.extract(response.url, html_content)
+        domain = urlparse(response.url).netloc.lower()
+        if domain.startswith("www."):
+            domain = domain[4:]
 
-            # Create and yield a Scrapy item
-            item = CompanyItem()
-            item["name"] = company_data.name
-            item["phone"] = company_data.phone
-            item["social_media"] = company_data.social_media
-            item["address"] = company_data.address
+        html_content = response.text
+        company_data = self.extractor.extract(response.url, html_content)
 
-            yield dict(item)  # Convert to dictionary to match the expected return type
+        item = CompanyItem()
 
-            # Follow contact and about pages - they often contain company information
-            for href in response.css("a::attr(href)").getall():
-                lower_href = href.lower()
-                if (
-                    "contact" in lower_href or "about" in lower_href
-                ) and not href.startswith("#"):
-                    yield response.follow(href, self.parse)
+        item["name"] = company_data.name
+        item["phone"] = company_data.phone
+        item["social_media"] = company_data.social_media
+        item["address"] = company_data.address
+        item["domain"] = domain
+        item["url"] = response.url
+        item["page_type"] = str(self._detect_page_type(domain, response.url))
 
-        except Exception as e:
-            self.logger.error(f"Error processing {response.url}: {str(e)}")
+        yield item
+
+        # Follow contact and about pages - they often contain company information
+        for href in response.css("a::attr(href)").getall():
+            if href.startswith("#"):
+                continue
+
+            lower_href = href.lower()
+
+            if "contact" in lower_href or "about" in lower_href:
+                yield response.follow(
+                    href,
+                    self.parse,
+                )
 
     def start_requests(self) -> Iterator[scrapy.Request]:
         """
@@ -105,14 +113,19 @@ class CompanySpider(scrapy.Spider):
             scrapy.Request: Initial requests to crawl
         """
         for url in self.start_urls:
-            yield scrapy.Request(url, callback=self.parse, errback=self.errback)
+            yield scrapy.Request(
+                url,
+                callback=self.parse,
+            )
 
-    def errback(self, failure: Any) -> None:
-        """
-        Handle request failures.
+    def _detect_page_type(self, domain: str, url: str) -> PageType:
+        """Detect page type from URL."""
+        url_lower = url.lower()
+        domain_lower = domain.lower()
 
-        Args:
-            failure: Failure object
-        """
-        request = failure.request
-        self.logger.error(f"Error crawling {request.url}: {failure.value}")
+        if url_lower.endswith(domain_lower):
+            return PageType.HOME
+        elif "contact" in url_lower or "about" in url_lower:
+            return PageType.CONTACT
+        else:
+            return PageType.OTHER
