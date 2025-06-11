@@ -18,6 +18,25 @@
             }
         }
     </script>
+    <script>
+        // Auto-refresh functionality
+        function startAutoRefresh() {
+            let seconds = 30;
+            const timerElement = document.getElementById('refresh-timer');
+
+            const timer = setInterval(() => {
+                seconds--;
+                if (seconds <= 0) {
+                    window.location.reload();
+                    seconds = 30;
+                }
+                timerElement.textContent = seconds;
+            }, 1000);
+        }
+
+        // Start auto-refresh when page loads
+        window.onload = startAutoRefresh;
+    </script>
 </head>
 
 <body class="bg-gray-50 min-h-screen">
@@ -34,6 +53,11 @@
                         </svg>
                         <span class="text-xl font-bold text-gray-800">Crawler Dashboard</span>
                     </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="text-sm text-gray-600">
+                        Auto-refresh in <span id="refresh-timer" class="font-medium">30</span>s
+                    </div>
                 </div>
             </div>
         </div>
