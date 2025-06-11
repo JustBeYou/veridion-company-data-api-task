@@ -9,3 +9,4 @@ Worklog
   decided on augmenting collected data points with enough information to generate
   statistics at the end of the process. Implemented stats collection and evaluation of
   scraping process. Created dashboard for evaluation results. Planning for improveing the numbers (speed, accuraccy etc.)
+* Spent 2 hours for deployment and improvements on scraping.
