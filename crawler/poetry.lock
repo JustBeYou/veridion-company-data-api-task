@@ -1185,6 +1185,18 @@ files = [
 ]
 
 [[package]]
+name = "phonenumbers"
+version = "9.0.7"
+description = "Python version of Google's common library for parsing, formatting, storing and validating international phone numbers."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "phonenumbers-9.0.7-py2.py3-none-any.whl", hash = "sha256:306eb14d1eaeb82230a08aa1614d04c93322b65b1ded2fff585161ed7eca39fc"},
+    {file = "phonenumbers-9.0.7.tar.gz", hash = "sha256:d4cc2aa36cbf9b0004c370f406d1510ddef56bba9e5f759471ef47e998d8a2f9"},
+]
+
+[[package]]
 name = "platformdirs"
 version = "4.3.8"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
@@ -1246,6 +1258,18 @@ groups = ["main"]
 files = [
     {file = "Protego-0.4.0-py2.py3-none-any.whl", hash = "sha256:37640bc0ebe37572d624453a21381d05e9d86e44f89ff1e81794d185a0491666"},
     {file = "protego-0.4.0.tar.gz", hash = "sha256:93a5e662b61399a0e1f208a324f2c6ea95b23ee39e6cbf2c96246da4a656c2f6"},
+]
+
+[[package]]
+name = "pyap"
+version = "0.3.1"
+description = "Pyap is an MIT Licensed text processing library, written in Python, for detecting and parsing addresses. Currently it supports USA, Canadian and British addresses."
+optional = false
+python-versions = ">=2.7"
+groups = ["main"]
+files = [
+    {file = "pyap-0.3.1-py2.py3-none-any.whl", hash = "sha256:d0b0440826fd2bb46018b8e4182cc7b79fbfcb3026f7d32c97384c0c362210c6"},
+    {file = "pyap-0.3.1.tar.gz", hash = "sha256:372ea7b6364a3d2c75ffb26ebbe269ce44d71b48620d57630548bc263a6691db"},
 ]
 
 [[package]]
@@ -1797,4 +1821,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "8ffdc661abf7a93fd7cd4a18a83b3b8d6f83f21a99e5b6b8cdc237f3edc8d4b7"
+content-hash = "e2d8c3e9ff15b18058da3598d8b204c98fa480b33089aedf6784d11df44be9d3"

@@ -84,8 +84,12 @@ class CompanySpider(scrapy.Spider):
         page_type = self._detect_page_type(domain, response.url)
 
         item["page_type"] = str(page_type)
-        item["phone"] = company_data.phone
-        item["social_media"] = company_data.social_media
+        item["phone"] = (
+            self.extractor.normalize_phone(company_data.phone)
+            if company_data.phone
+            else None
+        )
+        item["social_media"] = list(set(company_data.social_media))
         item["address"] = company_data.address
         item["domain"] = domain
         item["url"] = response.url

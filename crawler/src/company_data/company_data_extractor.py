@@ -231,6 +231,7 @@ class CompanyDataExtractor:
         text_content = " ".join(str(text) for text in text_elements)
 
         phone_patterns = [
+            r"^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$",
             r"\(\d{3}\)\s*\d{3}-\d{4}",  # (555) 123-4567
             r"\d{3}-\d{3}-\d{4}",  # 555-123-4567
             r"\+\d{1,3}\s*\(\d{3}\)\s*\d{3}-\d{4}",  # +1 (555) 123-4567
@@ -306,36 +307,178 @@ class CompanyDataExtractor:
             str: Normalized phone number (E.164 format)
         """
         # Extract digits only
-        digits = "".join(re.findall(r"\d", phone))
-
-        # Assume US number if 10 digits
-        if len(digits) == 10:
-            return f"+1{digits}"
-        # If already has country code
-        elif len(digits) > 10:
-            return f"+{digits}"
-
-        return phone
+        return "".join(re.findall(r"\d", phone))
 
     def is_valid_social_media_url(self, url: str) -> bool:
         """
-        Check if a URL is a valid social media link.
+        Check if a URL is a valid social media link to a profile, page, or channel.
 
         Args:
             url: URL to check
 
         Returns:
-            bool: True if it's a valid social media URL, False otherwise
+            bool: True if it's a valid social media profile/page/channel URL, False otherwise
         """
         try:
             parsed = urlparse(url)
             domain = parsed.netloc.lower()
+            path = parsed.path.lower().strip("/")
 
             # Handle cases where domain starts with www.
             if domain.startswith("www."):
                 domain = domain[4:]
 
-            return any(sm_domain == domain for sm_domain in self.social_media_domains)
+            # Check if it's a social media domain
+            if not any(sm_domain == domain for sm_domain in self.social_media_domains):
+                return False
+
+            # Skip empty paths or just root
+            if not path:
+                return False
+
+            # Define patterns for non-useful pages to exclude
+            excluded_patterns = [
+                "login",
+                "signin",
+                "signup",
+                "register",
+                "auth",
+                "oauth",
+                "help",
+                "support",
+                "contact",
+                "about",
+                "terms",
+                "privacy",
+                "policy",
+                "settings",
+                "account",
+                "preferences",
+                "api",
+                "developer",
+                "docs",
+                "legal",
+                "careers",
+                "jobs",
+                "press",
+                "blog",
+                "news",
+                "faq",
+                "search",
+                "explore",
+                "trending",
+                "discover",
+                "notifications",
+                "messages",
+                "inbox",
+                "home",
+                "feed",
+                "timeline",
+                "dashboard",
+                "ads",
+                "advertising",
+                "business",
+                "create",
+                "upload",
+                "post",
+                "logout",
+                "404",
+                "error",
+                "maintenance",
+                "status",
+            ]
+
+            # Check if path contains any excluded patterns
+            if any(pattern in path for pattern in excluded_patterns):
+                return False
+
+            # Domain-specific validation patterns
+            domain_patterns = {
+                "facebook.com": [
+                    r"^[^/]+/?$",  # /username
+                    r"^pages?/",  # /pages/...
+                    r"^profile\.php",  # /profile.php?id=...
+                    r"^groups?/",  # /groups/...
+                ],
+                "fb.com": [r"^[^/]+/?$"],
+                "twitter.com": [
+                    r"^[^/]+/?$",  # /username
+                    r"^[^/]+/status/\d+",  # /username/status/123 (tweets)
+                ],
+                "t.co": [r"^[a-zA-Z0-9]+/?$"],  # Short links
+                "linkedin.com": [
+                    r"^in/[^/]+/?$",  # /in/username
+                    r"^company/[^/]+/?$",  # /company/name
+                    r"^pub/[^/]+",  # /pub/username
+                    r"^school/[^/]+/?$",  # /school/name
+                ],
+                "li.com": [r"^[a-zA-Z0-9-]+/?$"],  # Short links
+                "instagram.com": [
+                    r"^[^/]+/?$",  # /username
+                    r"^p/[a-zA-Z0-9_-]+",  # /p/post_id
+                    r"^reel/[a-zA-Z0-9_-]+",  # /reel/reel_id
+                ],
+                "youtube.com": [
+                    r"^c/[^/]+/?$",  # /c/channel
+                    r"^channel/[^/]+/?$",  # /channel/id
+                    r"^user/[^/]+/?$",  # /user/username
+                    r"^@[^/]+/?$",  # /@username
+                    r"^watch\?v=[a-zA-Z0-9_-]+",  # /watch?v=video_id
+                ],
+                "youtu.be": [r"^[a-zA-Z0-9_-]{11}/?$"],  # Short video links
+                "github.com": [
+                    r"^[^/]+/?$",  # /username or /org
+                    r"^[^/]+/[^/]+/?$",  # /username/repo
+                ],
+                "pinterest.com": [
+                    r"^[^/]+/?$",  # /username
+                    r"^[^/]+/[^/]+/?$",  # /username/board
+                ],
+                "tiktok.com": [
+                    r"^@[^/]+/?$",  # /@username
+                    r"^@[^/]+/video/\d+",  # /@username/video/id
+                ],
+                "reddit.com": [
+                    r"^r/[^/]+/?$",  # /r/subreddit
+                    r"^u/[^/]+/?$",  # /u/username
+                    r"^user/[^/]+/?$",  # /user/username
+                ],
+                "medium.com": [
+                    r"^@[^/]+/?$",  # /@username
+                    r"^[^/]+/?$",  # /publication or /username
+                ],
+                "behance.net": [r"^[^/]+/?$"],  # /username
+                "dribbble.com": [r"^[^/]+/?$"],  # /username
+                "vimeo.com": [
+                    r"^[^/]+/?$",  # /username
+                    r"^\d+/?$",  # /video_id
+                ],
+                "soundcloud.com": [r"^[^/]+/?$"],  # /username
+                "spotify.com": [
+                    r"^user/[^/]+/?$",  # /user/username
+                    r"^artist/[^/]+/?$",  # /artist/id
+                    r"^playlist/[^/]+/?$",  # /playlist/id
+                ],
+                "twitch.tv": [r"^[^/]+/?$"],  # /username
+            }
+
+            # Check domain-specific patterns
+            if domain in domain_patterns:
+                patterns = domain_patterns[domain]
+                return any(re.match(pattern, path) for pattern in patterns)
+
+            # For other social media domains, accept if path looks like a username/profile
+            # (single path component, not containing common non-profile patterns)
+            path_parts = [part for part in path.split("/") if part]
+            if len(path_parts) == 1:
+                # Single path component - likely a username/profile
+                username = path_parts[0]
+                # Check if it looks like a reasonable username (alphanumeric, underscores, hyphens)
+                if re.match(r"^[a-zA-Z0-9_.-]+$", username) and len(username) > 0:
+                    return True
+
+            return False
+
         except Exception:
             return False
 

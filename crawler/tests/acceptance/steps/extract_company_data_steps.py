@@ -18,7 +18,7 @@ def step_given_website_with_phone_number(context) -> None:
         "html": "<html><body><div class='contact'>Phone: (555) 123-4567</div></body></html>",
     }
     context.expected_phone = "(555) 123-4567"
-    context.expected_normalized_phone = "+15551234567"
+    context.expected_normalized_phone = "5551234567"
 
 
 @given("a website with social media links")
