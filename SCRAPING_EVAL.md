@@ -46,4 +46,28 @@ Successfully Scraped:
 With Contact Pages:
 252
 
-##
+## Iteration 3 - scrape all available links with common words, no external, depth 1, fix social media extraction bug
+
+```
+June 11, 2025
+⚡ 1m 15s
+10:04 PM
+1026 datapoints from 696 domains
+
+47%
+Domain Success
+100%
+Page Success
+Phone Numbers
+74%
+Social Media
+73%
+Addresses
+19%
+Domains Attempted:
+696
+Successfully Scraped:
+326
+With Contact Pages:
+233
+```

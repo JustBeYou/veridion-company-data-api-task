@@ -98,14 +98,47 @@ class CompanySpider(scrapy.Spider):
 
         yield item
 
-        # Follow contact and about pages - they often contain company information
+        # Follow only relevant internal links within the same domain
         for href in response.css("a::attr(href)").getall():
-            if href.startswith("#"):
+            # Skip fragments, javascript, mailto, tel, and other non-http links
+            if (
+                not href
+                or href.startswith("#")
+                or href.startswith("javascript:")
+                or href.startswith("mailto:")
+                or href.startswith("tel:")
+                or href.startswith("sms:")
+                or href.startswith("ftp:")
+            ):
                 continue
 
-            lower_href = href.lower()
-
-            if "contact" in lower_href or "about" in lower_href:
+            # Only follow links containing common company page keywords
+            href_lower = href.lower()
+            if any(
+                keyword in href_lower
+                for keyword in [
+                    "home",
+                    "about",
+                    "contact",
+                    "company",
+                    "team",
+                    "location",
+                    "office",
+                    "address",
+                    "info",
+                    "who-we-are",
+                    "careers",
+                    "jobs",
+                    "career",
+                    "job",
+                    "join-us",
+                    "locations",
+                    "offices",
+                    "global",
+                    "worldwide",
+                ]
+            ):
+                # Follow the link, Scrapy will automatically filter based on allowed_domains
                 yield response.follow(
                     href,
                     self.parse,

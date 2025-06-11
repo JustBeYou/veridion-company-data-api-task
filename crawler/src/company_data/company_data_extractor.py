@@ -335,7 +335,7 @@ class CompanyDataExtractor:
             if domain.startswith("www."):
                 domain = domain[4:]
 
-            return any(sm_domain in domain for sm_domain in self.social_media_domains)
+            return any(sm_domain == domain for sm_domain in self.social_media_domains)
         except Exception:
             return False
 

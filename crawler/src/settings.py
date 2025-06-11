@@ -48,3 +48,6 @@ FEED_EXPORT_ENCODING = "utf-8"
 # Set timeout settings to 1 second
 DOWNLOAD_TIMEOUT = 1
 DNS_TIMEOUT = 1
+
+# Limit crawling depth
+DEPTH_LIMIT = 1

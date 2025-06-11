@@ -153,13 +153,14 @@ class TestCompanyDataExtractor(unittest.TestCase):
             "https://facebook.example.com",
             "facebook.com/acme",  # Missing scheme
             "https://fakebook.com/acme",
+            "https://nefsvt.com/equipment-lines",
         ]
 
         for url in valid_urls:
-            self.assertTrue(self.extractor.is_valid_social_media_url(url))
+            self.assertTrue(self.extractor.is_valid_social_media_url(url), url)
 
         for url in invalid_urls:
-            self.assertFalse(self.extractor.is_valid_social_media_url(url))
+            self.assertFalse(self.extractor.is_valid_social_media_url(url), url)
 
     def test_has_data(self) -> None:
         """Test checking if data has been extracted for a URL."""
