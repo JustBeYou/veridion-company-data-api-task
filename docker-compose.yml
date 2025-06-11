@@ -23,19 +23,12 @@ services:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
       - CRAWLER_SLEEP_MINUTES=60
+      - DOMAIN_LIMIT=100
     user: "1000:1000"
     depends_on:
       volume-init:
         condition: service_completed_successfully
-    command: >
-      sh -c "
-        while true; do
-          echo 'Starting crawler...'
-          python3 src/run_crawler.py --domains-file configs/companies-domains.csv --domain-limit 10000 || true
-          echo 'Crawler finished. Waiting ${CRAWLER_SLEEP_MINUTES} minutes for next run...'
-          sleep $((CRAWLER_SLEEP_MINUTES * 60))
-        done
-      "
+    command: [ "./run_crawler_cron.sh" ]
     restart: unless-stopped
     healthcheck:
       test: [ "CMD", "python3", "-c", "import os; exit(0 if os.path.exists('/app/data') else 1)" ]
