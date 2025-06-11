@@ -90,6 +90,12 @@ class CompanySpider(scrapy.Spider):
         item["domain"] = domain
         item["url"] = response.url
 
+        # Skip yield if all data fields are empty/None
+        if not any(
+            [company_data.phone, company_data.social_media, company_data.address]
+        ):
+            return
+
         yield item
 
         # Follow contact and about pages - they often contain company information

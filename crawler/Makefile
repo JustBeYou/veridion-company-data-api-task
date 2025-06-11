@@ -1,5 +1,4 @@
-.PHONY: help install test lint format type-check quality-check run clean pre-commit docker-build-crawler docker-run-crawler docker-run-with-output-crawler docker-build-dashboard docker-run-dashboard
-
+.PHONY: help install test lint format type-check quality-check run-crawler run-crawler-eval run-dashboard clean pre-commit docker-build-crawler docker-run-crawler docker-run-with-output-crawler docker-build-dashboard docker-run-dashboard
 help:
 	@echo "Available commands:"
 	@echo "  install         - Install dependencies"
@@ -8,7 +7,8 @@ help:
 	@echo "  format          - Format code"
 	@echo "  type-check      - Run type checking"
 	@echo "  quality-check   - Run all quality checks"
-	@echo "  run-crawler     - Run crawler"
+	@echo "  run-crawler     - Run crawler (small test run)"
+	@echo "  run-crawler-eval - Run crawler with evaluation (all domains)"
 	@echo "  run-dashboard   - Run dashboard"
 	@echo "  clean           - Clean build artifacts"
 	@echo "  pre-commit      - Run pre-commit hooks"
@@ -44,6 +44,9 @@ pre-commit:
 
 run-crawler:
 	poetry run python3 src/crawler.py
+
+run-crawler-eval:
+	poetry run python3 src/run_crawler.py --domains-file configs/companies-domains.csv --domain-limit 10000
 
 run-dashboard:
 	poetry run python3 src/dashboard/app.py

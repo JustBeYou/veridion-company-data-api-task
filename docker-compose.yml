@@ -23,7 +23,7 @@ services:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
       - CRAWLER_SLEEP_MINUTES=60
-      - DOMAIN_LIMIT=100
+      - DOMAIN_LIMIT=10000
     user: "1000:1000"
     depends_on:
       volume-init:
