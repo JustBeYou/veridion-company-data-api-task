@@ -7,12 +7,6 @@ Feature: Extract company data from websites
     Given the web crawler is initialized
     And the target website is accessible
 
-  Scenario: Extract company name from HTML title
-    Given a website with company name in the title tag
-    When I crawl the website
-    Then the company name should be extracted
-    And the extraction should be stored
-
   Scenario: Extract phone number from contact page
     Given a website with phone number in the content
     When I crawl the website

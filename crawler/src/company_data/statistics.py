@@ -187,7 +187,7 @@ def _calculate_domain_fill_rates(
         return {}
 
     # Calculate fill rates by domain
-    core_fields = ["name", "phone", "social_media", "address"]
+    core_fields = ["phone", "social_media", "address"]
     field_counts = {field: 0 for field in core_fields}
 
     for domain, records in domain_data.items():

@@ -50,7 +50,6 @@ def step_then_json_contains_8_records(context) -> None:
 def step_then_records_have_required_fields(context) -> None:
     """Verify each record has the required company data fields."""
     required_fields = [
-        "name",
         "phone",
         "social_media",
         "address",

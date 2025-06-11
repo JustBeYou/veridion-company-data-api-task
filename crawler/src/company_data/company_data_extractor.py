@@ -18,7 +18,6 @@ class CompanyData:
     """Class for storing company data extracted from websites."""
 
     url: str
-    name: Optional[str] = None
     phone: Optional[str] = None
     social_media: List[str] = field(default_factory=list)
     address: Optional[str] = None
@@ -206,7 +205,6 @@ class CompanyDataExtractor:
         try:
             html = lxml.html.fromstring(html_content)
 
-            company_data.name = self.extract_company_name(html)
             company_data.phone = self.extract_phone(html)
             company_data.social_media = self.extract_social_media(html)
             company_data.address = self.extract_address(html)
@@ -217,50 +215,6 @@ class CompanyDataExtractor:
             self.logger.error(f"Error extracting data from {url}: {str(e)}")
 
         return company_data
-
-    def extract_company_name(self, html: lxml.html.HtmlElement) -> Optional[str]:
-        """
-        Extract company name from HTML.
-
-        Args:
-            html: Parsed HTML
-
-        Returns:
-            Optional[str]: Company name if found, None otherwise
-        """
-        # Try to extract from title
-        title_elements = html.xpath("//title/text()")
-        if title_elements and len(title_elements) > 0:
-            title = str(title_elements[0]).strip()
-
-            # Skip titles that contain contact/about page indicators
-            title_lower = title.lower()
-            if not any(
-                keyword in title_lower
-                for keyword in ["contact us", "about us", "contact"]
-            ):
-                # Clean up the title - common patterns like "Company Name - Home" or "Company Name | Home"
-                name = re.sub(
-                    r"\s*[-|]\s*.*$", "", title
-                )  # Remove everything after dash or pipe
-                name = name.replace(
-                    "|", ""
-                ).strip()  # Remove any remaining pipe characters
-
-                if name.lower() == "home" or name.lower() == "home page":
-                    return None
-
-                if name:  # Only return if we have a non-empty name after cleaning
-                    return name
-
-        # Try to extract from h1
-        h1_elements = html.xpath("//h1/text()")
-        if h1_elements and len(h1_elements) > 0:
-            name = str(h1_elements[0]).strip()
-            name = name.replace("|", "").strip()  # Remove pipe characters
-            return name
-
-        return None
 
     def extract_phone(self, html: lxml.html.HtmlElement) -> Optional[str]:
         """

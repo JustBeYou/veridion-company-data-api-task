@@ -19,18 +19,6 @@ class TestCompanyDataExtractor(unittest.TestCase):
         # Test URL
         self.test_url = "https://example.com"
 
-        # Test HTML with company name in title
-        self.html_with_name = """
-        <html>
-            <head>
-                <title>Acme Corporation - Home</title>
-            </head>
-            <body>
-                <h1>Welcome to Acme Corporation</h1>
-            </body>
-        </html>
-        """
-
         # Test HTML with phone number
         self.html_with_phone = """
         <html>
@@ -89,17 +77,6 @@ class TestCompanyDataExtractor(unittest.TestCase):
         </html>
         """
 
-    def test_extract_company_name(self) -> None:
-        """Test extracting company name from HTML."""
-        # Parse HTML
-        html = self._parse_html(self.html_with_name)
-
-        # Extract company name
-        name = self.extractor.extract_company_name(html)
-
-        # Check that the name was extracted correctly
-        self.assertEqual(name, "Acme Corporation")
-
     def test_extract_phone(self) -> None:
         """Test extracting phone number from HTML."""
         # Parse HTML
@@ -142,7 +119,6 @@ class TestCompanyDataExtractor(unittest.TestCase):
         company_data = self.extractor.extract(self.test_url, self.html_with_all)
 
         # Check that all data was extracted correctly
-        self.assertEqual(company_data.name, "Acme Corporation")
         self.assertEqual(company_data.phone, "(555) 123-4567")
         self.assertEqual(len(company_data.social_media), 3)
         self.assertEqual(company_data.address, "123 Main St, Anytown, ST 12345")

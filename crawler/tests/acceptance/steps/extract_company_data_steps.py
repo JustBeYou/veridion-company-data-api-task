@@ -10,16 +10,6 @@ def step_given_target_website_accessible(context) -> None:
     context.website_accessible = True
 
 
-@given("a website with company name in the title tag")
-def step_given_website_with_company_name_in_title(context) -> None:
-    # For testing, we'll use a mock response or fixture
-    context.mock_response = {
-        "url": "https://example.com",
-        "html": "<html><head><title>Example Company - Home</title></head><body></body></html>",
-    }
-    context.expected_company_name = "Example Company"
-
-
 @given("a website with phone number in the content")
 def step_given_website_with_phone_number(context) -> None:
     # Mock response with phone number
@@ -77,12 +67,6 @@ def step_when_crawl_website(context) -> None:
     context.extracted_data = context.extractor.extract(
         context.mock_response["url"], context.mock_response["html"]
     )
-
-
-@then("the company name should be extracted")
-def step_then_company_name_extracted(context) -> None:
-    assert context.extracted_data.name is not None
-    assert context.extracted_data.name == context.expected_company_name
 
 
 @then("the extraction should be stored")

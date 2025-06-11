@@ -84,7 +84,6 @@ class CompanySpider(scrapy.Spider):
         page_type = self._detect_page_type(domain, response.url)
 
         item["page_type"] = str(page_type)
-        item["name"] = company_data.name if page_type == PageType.HOME else None
         item["phone"] = company_data.phone
         item["social_media"] = company_data.social_media
         item["address"] = company_data.address
