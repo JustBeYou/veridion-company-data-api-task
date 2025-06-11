@@ -31,7 +31,7 @@ services:
       sh -c "
         while true; do
           echo 'Starting crawler...'
-          python3 src/run_crawler.py --domains-file configs/companies-domains.csv --domain-limit 10000 || true
+          python3 src/run_crawler.py --domains-file configs/alive-domains.csv --domain-limit 10000 || true
           echo 'Crawler finished. Waiting ${CRAWLER_SLEEP_MINUTES} minutes for next run...'
           sleep $((CRAWLER_SLEEP_MINUTES * 60))
         done
