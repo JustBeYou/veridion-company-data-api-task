@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def run_crawler(
-    domains_file: str = "configs/companies-domains.csv", domain_limit: int = 50
+    domains_file: str = "configs/companies-domains.csv", domain_limit: int = 100
 ) -> str:
     """
     Run the web crawler and generate comprehensive statistics.
