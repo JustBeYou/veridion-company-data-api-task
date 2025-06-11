@@ -47,6 +47,7 @@ Successfully Scraped:
 356
 With Contact Pages:
 252
+```
 
 ## Iteration 3 - scrape all available links with common words, no external, depth 1, fix social media extraction bug
 
@@ -102,4 +103,32 @@ Successfully Scraped:
 341
 With Contact Pages:
 249
+```
+
+## Iteration 5 - use address parsing library, increase timeout to 3 seconds
+
+looks good enough for the challenge
+
+```
+June 11, 2025
+⚡ 2m 41s
+11:02 PM
+1145 datapoints from 696 domains
+
+55%
+Domain Success
+100%
+Page Success
+Phone Numbers
+73%
+Social Media
+70%
+Addresses
+51%
+Domains Attempted:
+696
+Successfully Scraped:
+384
+With Contact Pages:
+276
 ```

@@ -11,6 +11,7 @@ from typing import Dict, List, Optional, Set
 from urllib.parse import urlparse
 
 import lxml.html
+import pyap
 
 
 @dataclass
@@ -283,16 +284,17 @@ class CompanyDataExtractor:
             if address:
                 return address
 
-        # Look for address patterns
+        # # Look for address patterns
         text_elements = html.xpath("//text()")
         text_content = " ".join(str(text) for text in text_elements)
 
-        # Simple US address pattern
-        address_pattern = r"\d+\s+[\w\s]+,\s+[\w\s]+,\s+[A-Z]{2}\s+\d{5}"
-        matches = re.findall(address_pattern, text_content)
-
-        if matches and len(matches) > 0:
-            return str(matches[0])
+        for country in ["US", "CA"]:
+            try:
+                addresses = pyap.parse(text_content, country=country)
+                if addresses and len(addresses) > 0:
+                    return str(addresses[0])
+            except Exception as e:
+                self.logger.error(f"Error parsing address: {str(e)}")
 
         return None
 

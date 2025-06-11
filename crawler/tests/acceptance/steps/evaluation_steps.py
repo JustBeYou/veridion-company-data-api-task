@@ -35,14 +35,14 @@ def step_then_json_file_created(context) -> None:
     ), f"Output file {context.output_file} is not a JSON file"
 
 
-@then("the JSON file should contain exactly 5 company records")
-def step_then_json_contains_5_records(context) -> None:
-    """Verify the JSON file contains exactly 5 company records."""
+@then("the JSON file should contain exactly 6 company records")
+def step_then_json_contains_6_records(context) -> None:
+    """Verify the JSON file contains exactly 6 company records."""
     with open(context.output_file, "r") as f:
         data = json.load(f)
 
     assert isinstance(data, list), "JSON data should be a list of records"
-    assert len(data) == 5, f"Expected 5 records, got {len(data)}"
+    assert len(data) == 6, f"Expected 6 records, got {len(data)}"
     context.company_records = data
 
 
