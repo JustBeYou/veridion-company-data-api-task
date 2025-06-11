@@ -40,8 +40,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app
 
-# Create a non-root user
-RUN useradd --create-home appuser
+# Create a non-root user with specific UID/GID
+RUN useradd --create-home --uid 1000 appuser
 
 # Set working directory
 WORKDIR /app
@@ -58,11 +58,11 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Copy application code
 COPY . .
 
-# Change ownership to non-root user
-RUN chown -R appuser:appuser /app
+# Create data directory with proper permissions
+RUN mkdir -p /app/data && chown -R appuser:appuser /app
 
 # Switch to non-root user
 USER appuser
 
-# Command to run the crawler
-ENTRYPOINT ["python3", "src/crawler.py"]
+# Default command (can be overridden by docker-compose)
+CMD ["python3", "src/crawler.py"]

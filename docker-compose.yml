@@ -1,0 +1,79 @@
+services:
+  # Initialize volume with proper permissions
+  volume-init:
+    image: alpine:latest
+    volumes:
+      - crawler_data:/data
+    command: >
+      sh -c "
+        chown -R 1000:1000 /data &&
+        chmod -R 755 /data &&
+        echo 'Volume permissions set successfully'
+      "
+    user: root
+
+  crawler:
+    build:
+      context: ./crawler
+      dockerfile: Dockerfile.crawler
+    volumes:
+      - crawler_data:/app/data
+      - ./crawler/configs:/app/configs:ro
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      - CRAWLER_SLEEP_MINUTES=60
+    user: "1000:1000"
+    depends_on:
+      volume-init:
+        condition: service_completed_successfully
+    command: >
+      sh -c "
+        while true; do
+          echo 'Starting crawler...'
+          python3 src/run_crawler.py --domains-file configs/companies-domains.csv --domain-limit 10000 || true
+          echo 'Crawler finished. Waiting ${CRAWLER_SLEEP_MINUTES} minutes for next run...'
+          sleep $((CRAWLER_SLEEP_MINUTES * 60))
+        done
+      "
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "python3", "-c", "import os; exit(0 if os.path.exists('/app/data') else 1)" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  dashboard:
+    build:
+      context: ./crawler
+      dockerfile: Dockerfile.dashboard
+    ports:
+      - "5000:5000"
+    volumes:
+      - crawler_data:/app/data:ro
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      - FLASK_ENV=production
+    user: "1000:1000"
+    depends_on:
+      crawler:
+        condition: service_started
+      volume-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:5000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  crawler_data:
+    driver: local
+
+networks:
+  default:
+    name: crawler_network
