@@ -81,15 +81,34 @@ class CompanyDataExtractor:
         # Try to extract from title
         title_elements = html.xpath("//title/text()")
         if title_elements and len(title_elements) > 0:
-            # Clean up the title - common patterns like "Company Name - Home"
-            name = str(title_elements[0]).strip()
-            name = re.sub(r"\s*-\s*.*$", "", name)  # Remove everything after the dash
-            return name
+            title = str(title_elements[0]).strip()
+
+            # Skip titles that contain contact/about page indicators
+            title_lower = title.lower()
+            if not any(
+                keyword in title_lower
+                for keyword in ["contact us", "about us", "contact"]
+            ):
+                # Clean up the title - common patterns like "Company Name - Home" or "Company Name | Home"
+                name = re.sub(
+                    r"\s*[-|]\s*.*$", "", title
+                )  # Remove everything after dash or pipe
+                name = name.replace(
+                    "|", ""
+                ).strip()  # Remove any remaining pipe characters
+
+                if name.lower() == "home" or name.lower() == "home page":
+                    return None
+
+                if name:  # Only return if we have a non-empty name after cleaning
+                    return name
 
         # Try to extract from h1
         h1_elements = html.xpath("//h1/text()")
         if h1_elements and len(h1_elements) > 0:
-            return str(h1_elements[0]).strip()
+            name = str(h1_elements[0]).strip()
+            name = name.replace("|", "").strip()  # Remove pipe characters
+            return name
 
         return None
 

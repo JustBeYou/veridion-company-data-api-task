@@ -81,14 +81,15 @@ class CompanySpider(scrapy.Spider):
         company_data = self.extractor.extract(response.url, html_content)
 
         item = CompanyItem()
+        page_type = self._detect_page_type(domain, response.url)
 
-        item["name"] = company_data.name
+        item["page_type"] = str(page_type)
+        item["name"] = company_data.name if page_type == PageType.HOME else None
         item["phone"] = company_data.phone
         item["social_media"] = company_data.social_media
         item["address"] = company_data.address
         item["domain"] = domain
         item["url"] = response.url
-        item["page_type"] = str(self._detect_page_type(domain, response.url))
 
         yield item
 

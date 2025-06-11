@@ -63,7 +63,7 @@ docker-build-crawler:
 
 docker-run-crawler:
 	mkdir -p data
-	docker run --rm company-crawler
+	docker run --rm company-crawler --domain-limit 50
 
 docker-run-with-output-crawler:
 	mkdir -p data
