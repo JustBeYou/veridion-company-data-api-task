@@ -4,6 +4,7 @@ import argparse
 import logging
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 from src.searchdb.elasticsearch_importer import ElasticsearchImporter
 
@@ -14,6 +15,23 @@ def setup_logging(verbose: bool = False) -> None:
     logging.basicConfig(
         level=level, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
+
+
+def clean_url(url: str) -> str:
+    """Remove protocol, www and other unnecessary parts from URLs."""
+    # Parse the URL
+    parsed = urlparse(url)
+    # Get the netloc (domain) and path
+    domain = parsed.netloc
+    path = parsed.path
+
+    # Remove www. if present
+    if domain.startswith("www."):
+        domain = domain[4:]
+
+    # Combine domain and path, removing trailing slash
+    result = domain + path
+    return result.rstrip("/")
 
 
 def import_csv_command(args: argparse.Namespace) -> int:
@@ -71,7 +89,8 @@ def search_command(args: argparse.Namespace) -> int:
                 print(f"   Phones: {', '.join(result['phones'])}")
 
             if result.get("social_media"):
-                print(f"   Social Media: {', '.join(result['social_media'])}")
+                cleaned_social = [clean_url(url) for url in result["social_media"]]
+                print(f"   Social Media: {', '.join(cleaned_social)}")
 
             if result.get("addresses"):
                 print(f"   Addresses: {', '.join(result['addresses'])}")
@@ -108,7 +127,8 @@ def get_company_command(args: argparse.Namespace) -> int:
             print(f"Phones: {', '.join(result['phones'])}")
 
         if result.get("social_media"):
-            print(f"Social Media: {', '.join(result['social_media'])}")
+            cleaned_social = [clean_url(url) for url in result["social_media"]]
+            print(f"Social Media: {', '.join(cleaned_social)}")
 
         if result.get("addresses"):
             print(f"Addresses: {', '.join(result['addresses'])}")
@@ -117,7 +137,8 @@ def get_company_command(args: argparse.Namespace) -> int:
             print(f"Page Types: {', '.join(result['page_types'])}")
 
         if result.get("urls"):
-            print(f"URLs: {', '.join(result['urls'])}")
+            cleaned_urls = [clean_url(url) for url in result["urls"]]
+            print(f"URLs: {', '.join(cleaned_urls)}")
 
         return 0
 

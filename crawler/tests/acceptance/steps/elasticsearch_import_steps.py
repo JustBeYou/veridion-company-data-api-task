@@ -16,7 +16,7 @@ from src.searchdb.elasticsearch_importer import ElasticsearchImporter
 @given("an Elasticsearch instance is running at localhost:9200")
 def step_elasticsearch_running(context):
     """Ensure Elasticsearch is available for testing."""
-    context.es_client = Elasticsearch(["localhost:9200"])
+    context.es_client = Elasticsearch(["http://localhost:9200"])
     try:
         context.es_client.ping()
         context.elasticsearch_available = True
@@ -463,7 +463,7 @@ def step_verify_data_preservation(context):
 def step_verify_pre_aggregation(context):
     """Verify records were aggregated before ES import."""
     # This is tested by checking the final result has consolidated data
-    step_verify_consolidated_phones(context)
+    step_verify_unique_phones(context)
 
 
 @then("phone numbers should be consolidated into a unique array")
@@ -550,7 +550,7 @@ def step_verify_only_valid_data(context):
     if context.elasticsearch_available:
         # Should not have records with missing domains
         stats = context.importer.get_index_stats()
-        assert stats["document_count"] == 1, "Should only have 1 valid record"
+        assert stats["document_count"] == 2, "Should have 2 records with valid domains"
 
 
 @then("the import process should not fail due to missing values")

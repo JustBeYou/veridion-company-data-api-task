@@ -6,7 +6,12 @@ from typing import Any, Dict, List, Tuple, Union
 
 from flask import Flask, render_template
 
+from .api import api_bp
+
 app = Flask(__name__)
+
+# Register API Blueprint
+app.register_blueprint(api_bp)
 
 
 def load_crawler_stats() -> List[Dict[str, Any]]:
