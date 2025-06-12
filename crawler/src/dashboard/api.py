@@ -195,36 +195,84 @@ def build_search_query(
     """
     should_clauses = []
 
-    # Search in company names (highest boost)
+    HIGHEST_BOOST = 3.0
+    MEDIUM_BOOST = 2.0
+    LOWEST_BOOST = 1.0
+
+    # Search in company names
     if name:
+        # Fuzzy match on company names
         should_clauses.append(
             {
-                "multi_match": {
-                    "query": name,
-                    "fields": ["company_names^3", "company_names.keyword^2"],
-                    "type": "best_fields",
-                    "boost": 3.0,
+                "match": {
+                    "company_names": {
+                        "query": name,
+                        "fuzziness": "AUTO",
+                        "boost": HIGHEST_BOOST,
+                    }
                 }
             }
         )
+        # Exact match on keyword field
+        should_clauses.append(
+            {"term": {"company_names.keyword": {"value": name, "boost": HIGHEST_BOOST}}}
+        )
 
-    # Search in phone numbers (high boost)
+        # Split name by capital letters and add matching clause, keeping abbreviations together
+        name_parts = []
+        current_part = ""
+
+        for char in name:
+            if char.isupper():
+                if current_part and len(current_part) >= 3:
+                    name_parts.append(current_part)
+                current_part = char
+            else:
+                current_part += char
+
+        if current_part and len(current_part) >= 3:
+            name_parts.append(current_part)
+
+        if name_parts:
+            should_clauses.append(
+                {
+                    "match": {
+                        "company_names": {
+                            "query": " ".join(name_parts),
+                            "fuzziness": "AUTO",
+                            "boost": MEDIUM_BOOST,
+                        }
+                    }
+                }
+            )
+
+    # Search in phone numbers
     if phones:
         for phone in phones:
-            should_clauses.append({"term": {"phones": {"value": phone, "boost": 2.5}}})
+            should_clauses.append(
+                {"term": {"phones": {"value": phone, "boost": MEDIUM_BOOST}}}
+            )
 
     # Search in URLs/domains (medium boost)
     if urls:
         for url in urls:
-            should_clauses.append({"term": {"domain": {"value": url, "boost": 2.0}}})
-            should_clauses.append({"term": {"urls": {"value": url, "boost": 1.8}}})
+            should_clauses.append(
+                {"term": {"domain": {"value": url, "boost": HIGHEST_BOOST}}}
+            )
+            should_clauses.append(
+                {"term": {"urls": {"value": url, "boost": MEDIUM_BOOST}}}
+            )
 
     # Search in addresses (lower boost but fuzzy)
     if address:
         should_clauses.append(
             {
                 "match": {
-                    "addresses": {"query": address, "fuzziness": "AUTO", "boost": 1.5}
+                    "addresses": {
+                        "query": address,
+                        "fuzziness": "AUTO",
+                        "boost": LOWEST_BOOST,
+                    }
                 }
             }
         )

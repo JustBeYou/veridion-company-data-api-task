@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}API Search Showcase{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">API Search Showcase</h1>
+                <p class="text-gray-600 mt-2">Testing API search functionality with sample data</p>
+            </div>
+            <div class="text-right">
+                <div class="text-2xl font-bold text-primary">{{ total_entries }}</div>
+                <div class="text-sm text-gray-500">Total Entries</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Curl Example Section -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">
+            <svg class="inline w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                </path>
+            </svg>
+            Copy & Paste curl Example
+        </h2>
+        <div class="bg-gray-900 rounded-lg p-4 relative">
+            <pre class="text-green-400 text-sm overflow-x-auto" id="curl-example">{{ curl_example }}</pre>
+            <button onclick="copyCurlExample()"
+                class="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs">
+                Copy
+            </button>
+        </div>
+        <p class="text-sm text-gray-600 mt-2">
+            This example shows how to search for a company using the API endpoint.
+            Replace the data with your own search criteria.
+        </p>
+    </div>
+
+    <!-- Results Section -->
+    <div class="bg-white rounded-lg shadow-sm">
+        <div class="p-6 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-900">Search Results</h2>
+            <p class="text-gray-600 mt-1">Results for all entries from the CSV file</p>
+        </div>
+
+        <div class="divide-y divide-gray-200">
+            {% for result in results %}
+            <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Input Data -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-3">Input Data</h3>
+                        <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+                            <div class="flex">
+                                <span class="font-medium text-gray-600 w-20">Name:</span>
+                                <span class="text-gray-900">{{ result.input_data.name or 'N/A' }}</span>
+                            </div>
+                            <div class="flex">
+                                <span class="font-medium text-gray-600 w-20">Phone:</span>
+                                <span class="text-gray-900">{{ result.input_data.phone or 'N/A' }}</span>
+                            </div>
+                            <div class="flex">
+                                <span class="font-medium text-gray-600 w-20">Website:</span>
+                                <span class="text-gray-900 break-all">{{ result.input_data.website or 'N/A' }}</span>
+                            </div>
+                            <div class="flex">
+                                <span class="font-medium text-gray-600 w-20">Facebook:</span>
+                                <span class="text-gray-900 break-all">{{ result.input_data.facebook or 'N/A' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- API Response -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-3">
+                            API Response
+                            {% if result.api_response.found %}
+                            <span class="ml-2 px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                                Match Found
+                            </span>
+                            {% elif result.api_response.get('error') %}
+                            <span class="ml-2 px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+                                Error
+                            </span>
+                            {% else %}
+                            <span class="ml-2 px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
+                                No Match
+                            </span>
+                            {% endif %}
+                        </h3>
+
+                        {% if result.api_response.found %}
+                        <!-- Success Response -->
+                        <div class="bg-green-50 rounded-lg p-4">
+                            <div class="text-sm font-medium text-green-800 mb-2">
+                                Score: {{ "%.2f"|format(result.api_response.score) }}
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                {% for key, value in result.api_response.company.items() %}
+                                <div class="flex">
+                                    <span class="font-medium text-green-700 w-24 capitalize">{{ key.replace('_', ' ')
+                                        }}:</span>
+                                    <span class="text-green-900">
+                                        {% if value is iterable and value is not string %}
+                                        {{ value|join(', ') if value else 'N/A' }}
+                                        {% else %}
+                                        {{ value or 'N/A' }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% elif result.api_response.get('error') %}
+                        <!-- Error Response -->
+                        <div class="bg-red-50 rounded-lg p-4">
+                            <div class="text-sm font-medium text-red-800 mb-1">
+                                {{ result.api_response.error }}
+                            </div>
+                            <div class="text-sm text-red-700">
+                                {{ result.api_response.message }}
+                            </div>
+                        </div>
+                        {% else %}
+                        <!-- No Match Response -->
+                        <div class="bg-yellow-50 rounded-lg p-4">
+                            <div class="text-sm text-yellow-800">
+                                {{ result.api_response.message or 'No matching companies found' }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex justify-center">
+            <a href="{{ url_for('dashboard') }}"
+                class="bg-primary hover:bg-blue-600 text-white px-6 py-2 rounded-lg inline-flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyCurlExample() {
+        const curlText = document.getElementById('curl-example').textContent;
+        navigator.clipboard.writeText(curlText).then(function () {
+            // Show temporary success message
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            button.classList.add('bg-green-600');
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('bg-green-600');
+            }, 2000);
+        }, function (err) {
+            console.error('Could not copy text: ', err);
+            alert('Could not copy to clipboard. Please copy manually.');
+        });
+    }
+</script>
+{% endblock %}
