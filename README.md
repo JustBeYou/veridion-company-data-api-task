@@ -23,7 +23,7 @@ docker compose up # The scraper will start automatically, you should be able to 
 * **Kibana** - http://localhost:5601
 * **API** - http://localhost:5000/api/search
 
-**API responses showcase for all input samples can be found in (api-showcase.json)[./api-showcase.json].**
+**API responses showcase for all input samples can be found in** [api-showcase.json](./api-showcase.json)**.**
 
 Example API call:
 ```bash
