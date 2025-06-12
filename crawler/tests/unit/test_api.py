@@ -167,10 +167,10 @@ class TestAPIEndpoints(unittest.TestCase):
 
         # Verify search criteria processing
         search_criteria = data["search_criteria"]
-        self.assertEqual(search_criteria["name"], "Acme Corp")
+        self.assertEqual(search_criteria["names"], ["Acme Corp"])
         self.assertEqual(search_criteria["normalized_phones"], ["5551234567"])
         self.assertEqual(search_criteria["cleaned_urls"], ["example.com"])
-        self.assertEqual(search_criteria["address"], "123 Main St")
+        self.assertEqual(search_criteria["addresses"], ["123 Main St"])
 
     @patch("src.dashboard.api.ElasticsearchImporter")
     def test_search_endpoint_string_inputs(
@@ -221,6 +221,56 @@ class TestAPIEndpoints(unittest.TestCase):
         data = json.loads(response.data)
         self.assertIn("error", data)
         self.assertIn("Internal server error", data["error"])
+
+    @patch("src.dashboard.api.ElasticsearchImporter")
+    def test_search_endpoint_debug_mode(
+        self, mock_es_importer_class: MagicMock
+    ) -> None:
+        """Test search endpoint with debug=true returns top 10 results."""
+        mock_es_instance = MagicMock()
+        mock_es_importer_class.return_value = mock_es_instance
+        mock_es_instance.es_client.search.return_value = {
+            "hits": {
+                "hits": [
+                    {
+                        "_score": 2.5,
+                        "_source": {
+                            "domain": "example1.com",
+                            "company_names": ["Company 1"],
+                        },
+                    },
+                    {
+                        "_score": 2.0,
+                        "_source": {
+                            "domain": "example2.com",
+                            "company_names": ["Company 2"],
+                        },
+                    },
+                ]
+            }
+        }
+
+        payload = {
+            "name": ["Test Company"],
+            "debug": True,
+        }
+
+        response = self.client.post(
+            "/api/search", data=json.dumps(payload), content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+        data = json.loads(response.data)
+        self.assertTrue(data["found"])
+        self.assertIn("results", data)
+        self.assertEqual(len(data["results"]), 2)
+        self.assertEqual(data["results"][0]["score"], 2.5)
+        self.assertEqual(data["results"][1]["score"], 2.0)
+
+        # Verify the search was called with size=10
+        mock_es_instance.es_client.search.assert_called_once()
+        call_args = mock_es_instance.es_client.search.call_args
+        self.assertEqual(call_args.kwargs["size"], 10)
 
 
 if __name__ == "__main__":

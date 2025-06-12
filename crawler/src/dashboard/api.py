@@ -71,14 +71,15 @@ def search_companies() -> Any:
 
     Expected JSON format:
     {
-        "name": "string",
-        "phone": ["phone1", "phone2"],
-        "urls": ["url1", "url2"],
-        "address": "string"
+        "name": ["name1", "name2"] or "single name",
+        "phone": ["phone1", "phone2"] or "single phone",
+        "urls": ["url1", "url2"] or "single url",
+        "address": ["address1", "address2"] or "single address",
+        "debug": true/false (optional, returns top 10 results if true)
     }
 
     Returns:
-        JSON response with the best matching company record
+        JSON response with the best matching company record (or top 10 if debug=true)
     """
     try:
         # Get JSON data from request
@@ -87,55 +88,63 @@ def search_companies() -> Any:
             return jsonify({"error": "No JSON data provided"}), 400
 
         # Extract fields from request
-        name = data.get("name", "")
+        names = data.get("name", [])
         phones = data.get("phone", [])
         urls = data.get("urls", [])
-        address = data.get("address", "")
+        addresses = data.get("address", [])
+        debug = data.get("debug", False)
+
+        # Normalize inputs to lists
+        if isinstance(names, str):
+            names = [names] if names.strip() else []
+        if isinstance(addresses, str):
+            addresses = [addresses] if addresses.strip() else []
+        if isinstance(phones, str):
+            phones = [phones] if phones.strip() else []
+        if isinstance(urls, str):
+            urls = [urls] if urls.strip() else []
 
         # Validate inputs - check if any field has meaningful content
-        has_name = name and name.strip()
-        has_phones = (
-            phones and any(p.strip() for p in phones if isinstance(p, str))
-            if isinstance(phones, list)
-            else (phones and str(phones).strip())
+        has_names = names and any(n.strip() for n in names if isinstance(n, str))
+        has_phones = phones and any(p.strip() for p in phones if isinstance(p, str))
+        has_urls = urls and any(u.strip() for u in urls if isinstance(u, str))
+        has_addresses = addresses and any(
+            a.strip() for a in addresses if isinstance(a, str)
         )
-        has_urls = (
-            urls and any(u.strip() for u in urls if isinstance(u, str))
-            if isinstance(urls, list)
-            else (urls and str(urls).strip())
-        )
-        has_address = address and address.strip()
 
-        if not any([has_name, has_phones, has_urls, has_address]):
+        if not any([has_names, has_phones, has_urls, has_addresses]):
             return jsonify({"error": "At least one search field must be provided"}), 400
 
         # Normalize phone numbers
-        normalized_phones = []
-        if phones:
-            if isinstance(phones, str):
-                phones = [phones]
-            normalized_phones = [normalize_phone(phone) for phone in phones if phone]
+        normalized_phones = [
+            normalize_phone(phone) for phone in phones if phone and phone.strip()
+        ]
 
         # Clean URLs
-        cleaned_urls = []
-        if urls:
-            if isinstance(urls, str):
-                urls = [urls]
-            cleaned_urls = [clean_url(url) for url in urls if url]
+        cleaned_urls = [clean_url(url) for url in urls if url and url.strip()]
+
+        # Clean names (remove extra whitespace)
+        cleaned_names = [name.strip() for name in names if name and name.strip()]
+
+        # Clean addresses (remove extra whitespace)
+        cleaned_addresses = [
+            addr.strip() for addr in addresses if addr and addr.strip()
+        ]
 
         # Initialize Elasticsearch client
         es_importer = ElasticsearchImporter()
 
         # Build Elasticsearch query
         search_query = build_search_query(
-            name, normalized_phones, cleaned_urls, address
+            cleaned_names, normalized_phones, cleaned_urls, cleaned_addresses
         )
 
         # Execute search
+        search_size = 10 if debug else 1
         results = es_importer.es_client.search(
             index=es_importer.index_name,
             body=search_query,
-            size=1,  # Only return the best match
+            size=search_size,
         )
 
         # Process results
@@ -147,31 +156,48 @@ def search_companies() -> Any:
                         "found": False,
                         "message": "No matching companies found",
                         "search_criteria": {
-                            "name": name,
+                            "names": cleaned_names,
                             "normalized_phones": normalized_phones,
                             "cleaned_urls": cleaned_urls,
-                            "address": address,
+                            "addresses": cleaned_addresses,
                         },
                     }
                 ),
                 404,
             )
 
-        # Return the best match
-        best_match = hits[0]
-        return jsonify(
-            {
-                "found": True,
-                "score": best_match["_score"],
-                "company": best_match["_source"],
-                "search_criteria": {
-                    "name": name,
-                    "normalized_phones": normalized_phones,
-                    "cleaned_urls": cleaned_urls,
-                    "address": address,
-                },
-            }
-        )
+        # Return results (single best match or top 10 if debug)
+        if debug:
+            return jsonify(
+                {
+                    "found": True,
+                    "results": [
+                        {"score": hit["_score"], "company": hit["_source"]}
+                        for hit in hits
+                    ],
+                    "search_criteria": {
+                        "names": cleaned_names,
+                        "normalized_phones": normalized_phones,
+                        "cleaned_urls": cleaned_urls,
+                        "addresses": cleaned_addresses,
+                    },
+                }
+            )
+        else:
+            best_match = hits[0]
+            return jsonify(
+                {
+                    "found": True,
+                    "score": best_match["_score"],
+                    "company": best_match["_source"],
+                    "search_criteria": {
+                        "names": cleaned_names,
+                        "normalized_phones": normalized_phones,
+                        "cleaned_urls": cleaned_urls,
+                        "addresses": cleaned_addresses,
+                    },
+                }
+            )
 
     except Exception as e:
         logger.error(f"Error in search_companies: {str(e)}")
@@ -179,16 +205,16 @@ def search_companies() -> Any:
 
 
 def build_search_query(
-    name: str, phones: List[str], urls: List[str], address: str
+    names: List[str], phones: List[str], urls: List[str], addresses: List[str]
 ) -> Dict[str, Any]:
     """
     Build Elasticsearch query based on provided search criteria.
 
     Args:
-        name: Company name to search for
+        names: List of company names to search for
         phones: List of normalized phone numbers
         urls: List of cleaned URLs/domains
-        address: Address to search for
+        addresses: List of addresses to search for
 
     Returns:
         Dict: Elasticsearch query body
@@ -200,51 +226,56 @@ def build_search_query(
     LOWEST_BOOST = 1.0
 
     # Search in company names
-    if name:
-        # Fuzzy match on company names
-        should_clauses.append(
-            {
-                "match": {
-                    "company_names": {
-                        "query": name,
-                        "fuzziness": "AUTO",
-                        "boost": HIGHEST_BOOST,
-                    }
-                }
-            }
-        )
-        # Exact match on keyword field
-        should_clauses.append(
-            {"term": {"company_names.keyword": {"value": name, "boost": HIGHEST_BOOST}}}
-        )
-
-        # Split name by capital letters and add matching clause, keeping abbreviations together
-        name_parts = []
-        current_part = ""
-
-        for char in name:
-            if char.isupper():
-                if current_part and len(current_part) >= 3:
-                    name_parts.append(current_part)
-                current_part = char
-            else:
-                current_part += char
-
-        if current_part and len(current_part) >= 3:
-            name_parts.append(current_part)
-
-        if name_parts:
+    if names:
+        for name in names:
+            # Fuzzy match on company names
             should_clauses.append(
                 {
                     "match": {
                         "company_names": {
-                            "query": " ".join(name_parts),
+                            "query": name,
                             "fuzziness": "AUTO",
-                            "boost": MEDIUM_BOOST,
+                            "boost": HIGHEST_BOOST,
                         }
                     }
                 }
             )
+            # Exact match on keyword field
+            should_clauses.append(
+                {
+                    "term": {
+                        "company_names.keyword": {"value": name, "boost": HIGHEST_BOOST}
+                    }
+                }
+            )
+
+            # Split name by capital letters and add matching clause, keeping abbreviations together
+            name_parts = []
+            current_part = ""
+
+            for char in name:
+                if char.isupper():
+                    if current_part and len(current_part) >= 3:
+                        name_parts.append(current_part)
+                    current_part = char
+                else:
+                    current_part += char
+
+            if current_part and len(current_part) >= 3:
+                name_parts.append(current_part)
+
+            if name_parts:
+                should_clauses.append(
+                    {
+                        "match": {
+                            "company_names": {
+                                "query": " ".join(name_parts),
+                                "fuzziness": "AUTO",
+                                "boost": MEDIUM_BOOST,
+                            }
+                        }
+                    }
+                )
 
     # Search in phone numbers
     if phones:
@@ -264,18 +295,19 @@ def build_search_query(
             )
 
     # Search in addresses (lower boost but fuzzy)
-    if address:
-        should_clauses.append(
-            {
-                "match": {
-                    "addresses": {
-                        "query": address,
-                        "fuzziness": "AUTO",
-                        "boost": LOWEST_BOOST,
+    if addresses:
+        for address in addresses:
+            should_clauses.append(
+                {
+                    "match": {
+                        "addresses": {
+                            "query": address,
+                            "fuzziness": "AUTO",
+                            "boost": LOWEST_BOOST,
+                        }
                     }
                 }
-            }
-        )
+            )
 
     # If no specific criteria, return empty query
     if not should_clauses:

@@ -10,3 +10,7 @@ Worklog
   statistics at the end of the process. Implemented stats collection and evaluation of
   scraping process. Created dashboard for evaluation results. Planning for improveing the numbers (speed, accuraccy etc.)
 * Spent 2 hours for deployment and improvements on scraping.
+* Spent 2 more hours for improving scraping and curating data.
+* Spent 4 hours importing everything into ElasticSearch, writing the API, evaluating and writing the report.
+
+**Total hours: 15**
