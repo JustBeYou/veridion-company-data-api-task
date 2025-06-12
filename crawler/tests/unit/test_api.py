@@ -272,6 +272,45 @@ class TestAPIEndpoints(unittest.TestCase):
         call_args = mock_es_instance.es_client.search.call_args
         self.assertEqual(call_args.kwargs["size"], 10)
 
+    def test_export_showcase_endpoint(self) -> None:
+        """Test the showcase export endpoint."""
+        response = self.client.get("/api/showcase/export")
+        self.assertEqual(response.status_code, 200)
+
+        # Verify it's a JSON response
+        self.assertEqual(response.content_type, "application/json")
+
+        # Verify download headers are set
+        self.assertIn("attachment", response.headers.get("Content-Disposition", ""))
+        self.assertIn(
+            "api_showcase_export_", response.headers.get("Content-Disposition", "")
+        )
+
+        # Verify the response contains valid JSON
+        import json
+
+        data = json.loads(response.data)
+
+        # Check for required structure
+        self.assertIn("export_info", data)
+        self.assertIn("api_examples", data)
+        self.assertIn("api_features", data)
+        self.assertIn("field_descriptions", data)
+        self.assertIn("response_formats", data)
+
+        # Verify export info
+        self.assertIn("timestamp", data["export_info"])
+        self.assertIn("description", data["export_info"])
+        self.assertIn("api_endpoint", data["export_info"])
+
+        # Verify examples structure
+        self.assertIsInstance(data["api_examples"], list)
+        self.assertGreater(len(data["api_examples"]), 0)
+
+        # Verify features structure
+        self.assertIsInstance(data["api_features"], list)
+        self.assertGreater(len(data["api_features"]), 0)
+
 
 if __name__ == "__main__":
     unittest.main()

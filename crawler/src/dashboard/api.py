@@ -322,6 +322,141 @@ def build_search_query(
     return query
 
 
+@api_bp.route("/showcase/export", methods=["GET"])
+def export_showcase_data() -> Any:
+    """Export showcase data as downloadable JSON."""
+    try:
+        # This would typically get data from the same source as the showcase page
+        # For now, we'll create a sample structure that matches what would be displayed
+        import json
+        from datetime import datetime
+
+        from flask import make_response
+
+        # Sample data structure - in a real implementation, this would come from
+        # the same data source used by the showcase page
+        showcase_data = {
+            "export_info": {
+                "timestamp": datetime.now().isoformat(),
+                "description": "API Search Showcase Export",
+                "api_endpoint": "/api/search",
+                "total_entries": 0,  # This would be populated from actual data
+            },
+            "api_examples": [
+                {
+                    "name": "Basic Search",
+                    "description": "Single result search",
+                    "request": {
+                        "method": "POST",
+                        "url": "/api/search",
+                        "headers": {"Content-Type": "application/json"},
+                        "body": {
+                            "name": ["Acme Corporation", "Acme Corp"],
+                            "phone": ["555-123-4567", "+1-555-123-4567"],
+                            "urls": ["https://www.acme.com", "acme.com"],
+                            "address": ["123 Main St, Anytown USA", "123 Main Street"],
+                        },
+                    },
+                },
+                {
+                    "name": "Debug Search",
+                    "description": "Top 10 results search",
+                    "request": {
+                        "method": "POST",
+                        "url": "/api/search",
+                        "headers": {"Content-Type": "application/json"},
+                        "body": {
+                            "name": ["Tech Solutions"],
+                            "phone": ["555-987-6543"],
+                            "debug": True,
+                        },
+                    },
+                },
+            ],
+            "api_features": [
+                "Multiple values: All fields accept both single strings and arrays",
+                "Debug mode: Set debug=true to get top 10 results instead of best match",
+                "Smart matching: Fuzzy search with intelligent scoring",
+                "URL cleaning: Automatically removes protocols, www, and normalizes domains",
+                "Phone normalization: Extracts and normalizes phone numbers to digits-only",
+            ],
+            "field_descriptions": {
+                "name": "Company name(s) - supports multiple variations",
+                "phone": "Phone number(s) - automatically normalized",
+                "urls": "Website URLs - automatically cleaned and normalized",
+                "address": "Company address(es) - supports multiple formats",
+                "debug": "Boolean flag to return top 10 results instead of single best match",
+            },
+            "response_formats": {
+                "single_result": {
+                    "found": True,
+                    "score": 2.5,
+                    "company": {
+                        "domain": "example.com",
+                        "company_names": ["Example Corp"],
+                        "phones": ["5551234567"],
+                        "addresses": ["123 Main St"],
+                    },
+                    "search_criteria": {
+                        "names": ["Example Corp"],
+                        "normalized_phones": ["5551234567"],
+                        "cleaned_urls": ["example.com"],
+                        "addresses": ["123 Main St"],
+                    },
+                },
+                "debug_results": {
+                    "found": True,
+                    "results": [
+                        {
+                            "score": 2.5,
+                            "company": {
+                                "domain": "example1.com",
+                                "company_names": ["Company 1"],
+                            },
+                        },
+                        {
+                            "score": 2.0,
+                            "company": {
+                                "domain": "example2.com",
+                                "company_names": ["Company 2"],
+                            },
+                        },
+                    ],
+                    "search_criteria": {
+                        "names": ["Example"],
+                        "normalized_phones": [],
+                        "cleaned_urls": [],
+                        "addresses": [],
+                    },
+                },
+                "no_results": {
+                    "found": False,
+                    "message": "No matching companies found",
+                    "search_criteria": {
+                        "names": ["NonExistent Corp"],
+                        "normalized_phones": [],
+                        "cleaned_urls": [],
+                        "addresses": [],
+                    },
+                },
+            },
+        }
+
+        # Create response with proper headers for file download
+        response_data = json.dumps(showcase_data, indent=2, ensure_ascii=False)
+        response = make_response(response_data)
+        response.headers["Content-Type"] = "application/json"
+        response.headers["Content-Disposition"] = (
+            f'attachment; filename=api_showcase_export_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+        )
+
+        return response
+
+    except Exception as e:
+        logger.error(f"Error exporting showcase data: {str(e)}")
+        return jsonify({"error": f"Export failed: {str(e)}"}), 500
+
+
 @api_bp.route("/health", methods=["GET"])
 def health_check() -> Dict[str, str]:
     """Health check endpoint for the API."""
