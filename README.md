@@ -3,6 +3,8 @@ Company Data API (SW Engineer)
 
 # Overview
 
+**Video DEMO**: https://youtu.be/v_e0jSVl0gw
+
 **Disclaimer**: I did use LLM tools (ChatGPT, Claude, Cursor) for speeding up development as I would do for any day
 to day work. I spent around 16 hours on the solution, ~ 2 work days.
 
