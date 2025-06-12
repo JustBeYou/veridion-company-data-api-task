@@ -148,4 +148,6 @@ the following operations:
 ## Bonus points
 
 Some ideas about how one could evaluate the quality of the macthes:
-* 
+* use the ElasticSearch score as a guide (but it is influenced by boost values)
+* create a human-crafted dataset with perfect matches, compare similarity to perfect matches
+* semantic scoring comparing the input entry with the result using LLMs or other ML-based technique (should be explored how such an evaluation model may be trained)
