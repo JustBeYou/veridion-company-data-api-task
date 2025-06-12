@@ -1,148 +1,1667 @@
 {
   "export_info": {
-    "timestamp": "2025-06-12T15:47:01.681269",
-    "description": "API Search Showcase Export",
-    "api_endpoint": "/api/search",
-    "total_entries": 0
+    "timestamp": "2025-06-12T16:01:45.760153",
+    "description": "API Search Showcase Results Export",
+    "source": "API-input-sample.csv",
+    "total_entries": 32,
+    "note": "Contains actual API test results from CSV data displayed on /api-showcase page"
   },
-  "api_examples": [
+  "results": [
     {
-      "name": "Basic Search",
-      "description": "Single result search",
-      "request": {
-        "method": "POST",
-        "url": "/api/search",
-        "headers": {
-          "Content-Type": "application/json"
+      "input_data": {
+        "name": "Acorn Law P.C.",
+        "phone": "",
+        "website": "https://https//acornlawpc.com/",
+        "facebook": "https://www.facebook.com/acornfurnitureworkshops"
+      },
+      "api_request": {
+        "name": "Acorn Law P.C.",
+        "phone": [],
+        "urls": [
+          "https://https//acornlawpc.com/",
+          "https://www.facebook.com/acornfurnitureworkshops"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 122.77837,
+        "company": {
+          "domain": "acornlawpc.com",
+          "company_names": [
+            "Acorn Law P.C.",
+            "Acorn Law",
+            "Acorn Law P"
+          ]
         },
-        "body": {
-          "name": [
-            "Acme Corporation",
-            "Acme Corp"
+        "search_criteria": {
+          "names": [
+            "Acorn Law P.C."
           ],
-          "phone": [
-            "555-123-4567",
-            "+1-555-123-4567"
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "https",
+            "facebook.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Advance Net Support",
+        "phone": "(786) 426-3492",
+        "website": "",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "Advance Net Support",
+        "phone": [
+          "(786) 426-3492"
+        ],
+        "urls": [],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 85.40285,
+        "company": {
+          "domain": "advancenetsupport.com",
+          "company_names": [
+            "Advance Network Support",
+            "ADVANCE NETWORK SUPPORT INC"
+          ],
+          "phones": [
+            "7864263492"
+          ],
+          "social_media": [
+            "https://www.facebook.com/profile.php?id=100064803528337"
+          ],
+          "addresses": [
+            "11401 SW 40th St Suite #265-B Miami, FL 33165"
+          ],
+          "page_types": [
+            "home",
+            "contact"
           ],
           "urls": [
-            "https://www.acme.com",
-            "acme.com"
-          ],
-          "address": [
-            "123 Main St, Anytown USA",
-            "123 Main Street"
+            "https://advancenetsupport.com",
+            "https://advancenetsupport.com/contact-us/",
+            "https://advancenetsupport.com/about-us/referral-program/",
+            "https://advancenetsupport.com/about-us/"
           ]
+        },
+        "search_criteria": {
+          "names": [
+            "Advance Net Support"
+          ],
+          "normalized_phones": [
+            "7864263492"
+          ],
+          "cleaned_urls": [],
+          "addresses": []
         }
       }
     },
     {
-      "name": "Debug Search",
-      "description": "Top 10 results search",
-      "request": {
-        "method": "POST",
-        "url": "/api/search",
-        "headers": {
-          "Content-Type": "application/json"
-        },
-        "body": {
-          "name": [
-            "Tech Solutions"
-          ],
-          "phone": [
-            "555-987-6543"
-          ],
-          "debug": true
-        }
-      }
-    }
-  ],
-  "api_features": [
-    "Multiple values: All fields accept both single strings and arrays",
-    "Debug mode: Set debug=true to get top 10 results instead of best match",
-    "Smart matching: Fuzzy search with intelligent scoring",
-    "URL cleaning: Automatically removes protocols, www, and normalizes domains",
-    "Phone normalization: Extracts and normalizes phone numbers to digits-only"
-  ],
-  "field_descriptions": {
-    "name": "Company name(s) - supports multiple variations",
-    "phone": "Phone number(s) - automatically normalized",
-    "urls": "Website URLs - automatically cleaned and normalized",
-    "address": "Company address(es) - supports multiple formats",
-    "debug": "Boolean flag to return top 10 results instead of single best match"
-  },
-  "response_formats": {
-    "single_result": {
-      "found": true,
-      "score": 2.5,
-      "company": {
-        "domain": "example.com",
-        "company_names": [
-          "Example Corp"
-        ],
-        "phones": [
-          "5551234567"
-        ],
-        "addresses": [
-          "123 Main St"
-        ]
+      "input_data": {
+        "name": "Aroostook",
+        "phone": "207.762.9321",
+        "website": "",
+        "facebook": ""
       },
-      "search_criteria": {
-        "names": [
-          "Example Corp"
+      "api_request": {
+        "name": "Aroostook",
+        "phone": [
+          "207.762.9321"
         ],
-        "normalized_phones": [
-          "5551234567"
-        ],
-        "cleaned_urls": [
-          "example.com"
-        ],
-        "addresses": [
-          "123 Main St"
-        ]
-      }
-    },
-    "debug_results": {
-      "found": true,
-      "results": [
-        {
-          "score": 2.5,
-          "company": {
-            "domain": "example1.com",
-            "company_names": [
-              "Company 1"
-            ]
-          }
+        "urls": [],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 55.712402,
+        "company": {
+          "domain": "aroostooktechnologies.com",
+          "company_names": [
+            "Aroostook Technologies",
+            "Aroostook Technologies Inc."
+          ],
+          "phones": [
+            "2077629321"
+          ],
+          "addresses": [
+            "4 Airport Drive Presque Isle, ME 04769",
+            "4 Airport Drive, Presque Isle, ME 04769"
+          ],
+          "page_types": [
+            "other",
+            "contact"
+          ],
+          "urls": [
+            "https://www.aroostooktechnologies.com/",
+            "https://www.aroostooktechnologies.com/contact-us/",
+            "https://www.aroostooktechnologies.com/about-us/"
+          ]
         },
-        {
-          "score": 2.0,
-          "company": {
-            "domain": "example2.com",
-            "company_names": [
-              "Company 2"
-            ]
-          }
+        "search_criteria": {
+          "names": [
+            "Aroostook"
+          ],
+          "normalized_phones": [
+            "2077629321"
+          ],
+          "cleaned_urls": [],
+          "addresses": []
         }
-      ],
-      "search_criteria": {
-        "names": [
-          "Example"
-        ],
-        "normalized_phones": [],
-        "cleaned_urls": [],
-        "addresses": []
       }
     },
-    "no_results": {
-      "found": false,
-      "message": "No matching companies found",
-      "search_criteria": {
-        "names": [
-          "NonExistent Corp"
+    {
+      "input_data": {
+        "name": "&AWL",
+        "phone": "",
+        "website": "awlsnap.com",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "&AWL",
+        "phone": [],
+        "urls": [
+          "awlsnap.com"
         ],
-        "normalized_phones": [],
-        "cleaned_urls": [],
-        "addresses": []
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 39.940712,
+        "company": {
+          "domain": "awlsnap.com",
+          "company_names": [
+            "Awl Snap Leather Goods",
+            "Awl Snap LLC.",
+            "Awl Snap"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "&AWL"
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "awlsnap.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "RyanLBatesDDS",
+        "phone": "(509) 276-6996",
+        "website": "google.com",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "RyanLBatesDDS",
+        "phone": [
+          "(509) 276-6996"
+        ],
+        "urls": [
+          "google.com"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 29.222054,
+        "company": {
+          "domain": "batesdds.com",
+          "company_names": [
+            "Bates DDS",
+            "BatesDDS - Ryan Bates DDS"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "RyanLBatesDDS"
+          ],
+          "normalized_phones": [
+            "5092766996"
+          ],
+          "cleaned_urls": [
+            "google.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Cadott Family Restaurant Limited",
+        "phone": "715.978.0027",
+        "website": "google.com",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "Cadott Family Restaurant Limited",
+        "phone": [
+          "715.978.0027"
+        ],
+        "urls": [
+          "google.com"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 116.00846,
+        "company": {
+          "domain": "cadottfamilyrestaurant.com",
+          "company_names": [
+            "Cadott Family Restaurant",
+            "Cadott Family"
+          ],
+          "phones": [
+            "7159780027"
+          ],
+          "social_media": [
+            "https://www.facebook.com/cadottfamilyrestaurant/",
+            "https://www.instagram.com/cadottfamilyrestaurant/"
+          ],
+          "addresses": [
+            "Street Address \n                                     \n                                     \n                                     City \n                                  \n                                     \n                                     ZIP Code"
+          ],
+          "page_types": [
+            "home",
+            "contact"
+          ],
+          "urls": [
+            "https://cadottfamilyrestaurant.com",
+            "https://cadottfamilyrestaurant.com/contact/",
+            "https://cadottfamilyrestaurant.com/about/"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "Cadott Family Restaurant Limited"
+          ],
+          "normalized_phones": [
+            "7159780027"
+          ],
+          "cleaned_urls": [
+            "google.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Denham's Florist Inc",
+        "phone": "(706) 685.0182",
+        "website": "http://dreamservicesoftware.com",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "Denham's Florist Inc",
+        "phone": [
+          "(706) 685.0182"
+        ],
+        "urls": [
+          "http://dreamservicesoftware.com"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 80.98348,
+        "company": {
+          "domain": "denhamsflorist.com",
+          "company_names": [
+            "Denham's Florist"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "Denham's Florist Inc"
+          ],
+          "normalized_phones": [
+            "7066850182"
+          ],
+          "cleaned_urls": [
+            "dreamservicesoftware.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Garrett-Wietholter-State-Farm-Agent",
+        "phone": "(317) 873-3230",
+        "website": "google.com",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "Garrett-Wietholter-State-Farm-Agent",
+        "phone": [
+          "(317) 873-3230"
+        ],
+        "urls": [
+          "google.com"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 136.39934,
+        "company": {
+          "domain": "garrettwietholter.com",
+          "company_names": [
+            "Garrett Wietholter",
+            "Garrett Wietholter Ins Agy Inc.",
+            "Garrett Wietholter - State Farm Insurance Agent"
+          ],
+          "phones": [
+            "3178733230"
+          ],
+          "social_media": [
+            "https://www.facebook.com/153341281385570",
+            "https://www.linkedin.com/in/garrett-wietholter-b5037a88"
+          ],
+          "addresses": [
+            "and the rest of the State of Indiana"
+          ],
+          "page_types": [
+            "home",
+            "other"
+          ],
+          "urls": [
+            "https://garrettwietholter.com",
+            "https://garrettwietholter.com/jobs",
+            "https://garrettwietholter.com/insurance/homeowners"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "Garrett-Wietholter-State-Farm-Agent"
+          ],
+          "normalized_phones": [
+            "3178733230"
+          ],
+          "cleaned_urls": [
+            "google.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "GSS",
+        "phone": "",
+        "website": "",
+        "facebook": "https://www.facebook.com/GSSstrings/"
+      },
+      "api_request": {
+        "name": "GSS",
+        "phone": [],
+        "urls": [
+          "https://www.facebook.com/GSSstrings/"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 12.99442,
+        "company": {
+          "domain": "ssmobile.store",
+          "company_names": [
+            "SS Mobile"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "GSS"
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "facebook.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Hueboost Services //",
+        "phone": "(+877) 449-5079",
+        "website": "",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "Hueboost Services //",
+        "phone": [
+          "(+877) 449-5079"
+        ],
+        "urls": [],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 27.704992,
+        "company": {
+          "domain": "nefsvt.com",
+          "company_names": [
+            "Northeast Farm Services",
+            "Northeast Farm Services Inc.",
+            "Northeast Farm Service",
+            "NEFS",
+            "Northeast Farm Sales & Service INC.",
+            "Northeast Farm Sales & Service"
+          ],
+          "phones": [
+            "8027548863"
+          ],
+          "social_media": [
+            "https://www.facebook.com/NortheastFarmServices/",
+            "https://www.facebook.com/NortheastFarmServices/?ref=hl",
+            "https://www.tiktok.com/@northeastfarmservice",
+            "https://www.youtube.com/channel/UCRZ0tRSvW4bGp0dmWWAeySw",
+            "https://www.instagram.com/nefsvt/"
+          ],
+          "page_types": [
+            "home",
+            "contact"
+          ],
+          "urls": [
+            "https://nefsvt.com",
+            "https://nefsvt.com/contact"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "Hueboost Services //"
+          ],
+          "normalized_phones": [
+            "8774495079"
+          ],
+          "cleaned_urls": [],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "American Inns of Court Company",
+        "phone": "+1703-684-3590",
+        "website": "innsc.com",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "American Inns of Court Company",
+        "phone": [
+          "+1703-684-3590"
+        ],
+        "urls": [
+          "innsc.com"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 123.492935,
+        "company": {
+          "domain": "innsofcourt.org",
+          "company_names": [
+            "American Inns of Court Foundation",
+            "American Inns of Court"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "American Inns of Court Company"
+          ],
+          "normalized_phones": [
+            "17036843590"
+          ],
+          "cleaned_urls": [
+            "innsc.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "JETT Business Technology LTD",
+        "phone": "(678) 387-5715",
+        "website": "https://www.google.com/",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "JETT Business Technology LTD",
+        "phone": [
+          "(678) 387-5715"
+        ],
+        "urls": [
+          "https://www.google.com/"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 80.55538,
+        "company": {
+          "domain": "jettbt.com",
+          "company_names": [
+            "JETT Business Technology",
+            "UniSys Corporation"
+          ],
+          "phones": [
+            "6783875717",
+            "6783875715"
+          ],
+          "addresses": [
+            "1060 Windward Ridge Pkwy, Suite 150, Alpharetta, GA 30005"
+          ],
+          "page_types": [
+            "home",
+            "contact",
+            "other"
+          ],
+          "urls": [
+            "https://jettbt.com",
+            "https://jettbt.com/contact-us/",
+            "https://jettbt.com/about-us/",
+            "https://jettbt.com/it-solutions-for-manufacturing-company/",
+            "https://jettbt.com/it-services-for-landscaping-company/",
+            "https://jettbt.com/it-services-for-insurance-company/",
+            "https://jettbt.com/it-services-for-roofing-company/",
+            "https://jettbt.com/it-services-for-property-management-company/",
+            "https://jettbt.com/it-services-for-hvac-company/"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "JETT Business Technology LTD"
+          ],
+          "normalized_phones": [
+            "6783875715"
+          ],
+          "cleaned_urls": [
+            "google.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "NCCA Inc.",
+        "phone": "207.762.9321",
+        "website": "",
+        "facebook": "https://www.facebook.com/musselrockcloggers/"
+      },
+      "api_request": {
+        "name": "NCCA Inc.",
+        "phone": [
+          "207.762.9321"
+        ],
+        "urls": [
+          "https://www.facebook.com/musselrockcloggers/"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 21.958006,
+        "company": {
+          "domain": "aroostooktechnologies.com",
+          "company_names": [
+            "Aroostook Technologies",
+            "Aroostook Technologies Inc."
+          ],
+          "phones": [
+            "2077629321"
+          ],
+          "addresses": [
+            "4 Airport Drive Presque Isle, ME 04769",
+            "4 Airport Drive, Presque Isle, ME 04769"
+          ],
+          "page_types": [
+            "other",
+            "contact"
+          ],
+          "urls": [
+            "https://www.aroostooktechnologies.com/",
+            "https://www.aroostooktechnologies.com/contact-us/",
+            "https://www.aroostooktechnologies.com/about-us/"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "NCCA Inc."
+          ],
+          "normalized_phones": [
+            "2077629321"
+          ],
+          "cleaned_urls": [
+            "facebook.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "NY AL Elevator",
+        "phone": "",
+        "website": "elevator.io",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "NY AL Elevator",
+        "phone": [],
+        "urls": [
+          "elevator.io"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 59.1696,
+        "company": {
+          "domain": "nynjelevator.com",
+          "company_names": [
+            "NY NJ Elevator Corp.",
+            "Nynjelevator",
+            "NY NJ Elevator Co.",
+            "NJ Elevator Corp."
+          ],
+          "phones": [
+            "8885693042"
+          ],
+          "social_media": [
+            "https://www.linkedin.com/company/ny-nj-elevator-co",
+            "https://www.facebook.com/NYNJElevatorCo/"
+          ],
+          "addresses": [
+            "353 West 48th Street 4th Floor New York, NY 10036"
+          ],
+          "page_types": [
+            "other",
+            "contact"
+          ],
+          "urls": [
+            "https://www.nynjelevator.com/",
+            "https://www.nynjelevator.com/about",
+            "https://www.nynjelevator.com/contact"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "NY AL Elevator"
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "elevator.io"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "NY Staffing LLC.",
+        "phone": "",
+        "website": "nyexecstaffing.com",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "NY Staffing LLC.",
+        "phone": [],
+        "urls": [
+          "nyexecstaffing.com"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 45.71311,
+        "company": {
+          "domain": "proexecstaffing.com",
+          "company_names": [
+            "Pro-Exec Staffing LLC.",
+            "Pro Exec Staffing"
+          ],
+          "phones": [
+            "7132482245"
+          ],
+          "social_media": [
+            "https://www.facebook.com/proexecstaffing",
+            "https://linkedin.com/company/pro-exec-staffing",
+            "https://twitter.com/exec_pro"
+          ],
+          "page_types": [
+            "home",
+            "contact"
+          ],
+          "urls": [
+            "https://proexecstaffing.com",
+            "https://proexecstaffing.com/contact-us",
+            "https://proexecstaffing.com/about-us"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "NY Staffing LLC."
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "nyexecstaffing.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Puppet Heap USA",
+        "phone": "",
+        "website": "puppet.io",
+        "facebook": "https://facebook.com/puppetheap"
+      },
+      "api_request": {
+        "name": "Puppet Heap USA",
+        "phone": [],
+        "urls": [
+          "puppet.io",
+          "https://facebook.com/puppetheap"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 90.02731,
+        "company": {
+          "domain": "puppetheap.com",
+          "company_names": [
+            "Puppet Heap",
+            "Puppet Heap LLC."
+          ],
+          "phones": [
+            "2012221014"
+          ],
+          "social_media": [
+            "https://www.tiktok.com/@puppetheap",
+            "http://instagram.com/puppetheap",
+            "https://www.linkedin.com/company/puppetheap/",
+            "https://www.facebook.com/puppetheap/"
+          ],
+          "page_types": [
+            "other"
+          ],
+          "urls": [
+            "https://www.puppetheap.com/"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "Puppet Heap USA"
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "puppet.io",
+            "facebook.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "SafetyChain Software Services Pty. Ltd.",
+        "phone": "",
+        "website": "https://safetychain.com/about-us",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "SafetyChain Software Services Pty. Ltd.",
+        "phone": [],
+        "urls": [
+          "https://safetychain.com/about-us"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 99.25969,
+        "company": {
+          "domain": "safetychain.com",
+          "company_names": [
+            "SafetyChain Software",
+            "SafetyChain Software Inc.",
+            "Safety Chain"
+          ],
+          "phones": [
+            "8882357540",
+            "8887986060"
+          ],
+          "social_media": [
+            "https://www.linkedin.com/company/safetychain-software/",
+            "https://www.youtube.com/channel/UCMSYeHBHsysxGcSsGBdZEhA",
+            "https://www.twitter.com/safetychain",
+            "https://www.facebook.com/safetychain/",
+            "https://www.linkedin.com/in/drew-stovall-833b4016/",
+            "https://www.linkedin.com/in/bryan-riehl-b3a88137/",
+            "https://www.linkedin.com/in/noahlogan/",
+            "https://www.linkedin.com/in/kellymayfield42/",
+            "https://www.linkedin.com/in/roger-woehl-5902409/",
+            "https://www.linkedin.com/in/robert-sproule-b02b783/",
+            "https://www.linkedin.com/in/geoff-nelson-6619035/",
+            "https://www.linkedin.com/in/naisok/",
+            "https://www.linkedin.com/in/yvonne-lirette-3a3099148/",
+            "https://www.linkedin.com/in/timsobocinski/",
+            "https://www.linkedin.com/in/eric-hansen-619153/",
+            "https://www.linkedin.com/in/deanbrown/",
+            "https://www.linkedin.com/in/randal-burrier/"
+          ],
+          "addresses": [
+            "7599 Redwood Blvd, Suite #205 Novato, CA 94945"
+          ],
+          "page_types": [
+            "home",
+            "contact",
+            "other"
+          ],
+          "urls": [
+            "https://safetychain.com",
+            "https://safetychain.com/contact-us",
+            "https://safetychain.com/careers",
+            "https://safetychain.com/company",
+            "https://safetychain.com/resources/global-food-company-increased-production",
+            "https://safetychain.com/resources/real-time-data-weight-checks-case-study"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "SafetyChain Software Services Pty. Ltd."
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "safetychain.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "SBS*",
+        "phone": "",
+        "website": "http://sbstransportllc.com/index.html?lang=en",
+        "facebook": "https://www.facebook.com/SBS-Transport-LLC-101932885163238"
+      },
+      "api_request": {
+        "name": "SBS*",
+        "phone": [],
+        "urls": [
+          "http://sbstransportllc.com/index.html?lang=en",
+          "https://www.facebook.com/SBS-Transport-LLC-101932885163238"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 46.518063,
+        "company": {
+          "domain": "sbstransportllc.com",
+          "company_names": [
+            "SBS Transport",
+            "SBS Transport LLC."
+          ],
+          "phones": [
+            "6167771844",
+            "6162293949"
+          ],
+          "social_media": [
+            "https://www.facebook.com/101932885163238",
+            "https://www.instagram.com/sbstransportllc/"
+          ],
+          "page_types": [
+            "home",
+            "contact",
+            "other"
+          ],
+          "urls": [
+            "https://sbstransportllc.com",
+            "https://sbstransportllc.com/contact",
+            "https://sbstransportllc.com/meet-the-team",
+            "https://sbstransportllc.com/about-2"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "SBS*"
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "sbstransportllc.com",
+            "facebook.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "SteppIR Tree Services",
+        "phone": "",
+        "website": "steppir.com",
+        "facebook": "https://www.facebook.com/SteppIR/"
+      },
+      "api_request": {
+        "name": "SteppIR Tree Services",
+        "phone": [],
+        "urls": [
+          "steppir.com",
+          "https://www.facebook.com/SteppIR/"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 55.996925,
+        "company": {
+          "domain": "hollytreeservice.net",
+          "company_names": [
+            "Holly Tree Service. Inc.",
+            "Holly Tree Service"
+          ],
+          "phones": [
+            "8454772104"
+          ],
+          "social_media": [
+            "https://instagram.com/hollytreeservice",
+            "https://facebook.com/profile.php?id=100091209788929"
+          ],
+          "addresses": [
+            "Street Address \n                                     \n                                         \n                                         Address Line 2 \n                                     \n                                     \n                                     City \n                                  \n                                         \n                                         State / Province / Region \n                                       \n                                     \n                                     ZIP / Postal Code \n                                 \n                                         Afghanistan Albania Algeria American Samoa Andorra Angola Anguilla Antarctica Antigua and Barbuda Argentina Armenia Aruba Australia Austria Azerbaijan Bahamas Bahrain Bangladesh Barbados Belarus Belgium Belize Benin Bermuda Bhutan Bolivia Bonaire, Sint Eustatius and Saba Bosnia and Herzegovina Botswana Bouvet Island Brazil British Indian Ocean Territory Brunei Darussalam Bulgaria Burkina Faso Burundi Cabo Verde Cambodia Cameroon Canada Cayman Islands Central African Republic Chad Chile China Christmas Island Cocos Islands Colombia Comoros Congo Congo, Democratic Republic of the Cook Islands Costa Rica Croatia Cuba Curaçao Cyprus Czechia Côte d'Ivoire Denmark Djibouti Dominica Dominican Republic Ecuador Egypt El Salvador Equatorial Guinea Eritrea Estonia Eswatini Ethiopia Falkland Islands Faroe Islands Fiji Finland France French Guiana French Polynesia French Southern Territories Gabon Gambia Georgia Germany Ghana Gibraltar Greece Greenland Grenada Guadeloupe Guam Guatemala Guernsey Guinea Guinea-Bissau Guyana Haiti Heard Island and McDonald Islands Holy See Honduras Hong Kong Hungary Iceland India Indonesia Iran Iraq Ireland Isle of Man Israel Italy Jamaica Japan Jersey Jordan Kazakhstan Kenya Kiribati Korea, Democratic People's Republic of Korea, Republic of Kuwait Kyrgyzstan Lao People's Democratic Republic Latvia Lebanon Lesotho Liberia Libya Liechtenstein Lithuania Luxembourg Macao Madagascar Malawi Malaysia Maldives Mali Malta Marshall Islands Martinique Mauritania Mauritius Mayotte Mexico Micronesia Moldova Monaco Mongolia Montenegro Montserrat Morocco Mozambique Myanmar Namibia Nauru Nepal Netherlands New Caledonia New Zealand Nicaragua Niger Nigeria Niue Norfolk Island North Macedonia Northern Mariana Islands Norway Oman Pakistan Palau Palestine, State of Panama Papua New Guinea Paraguay Peru Philippines Pitcairn Poland Portugal Puerto Rico Qatar Romania Russian Federation Rwanda Réunion Saint Barthélemy Saint Helena, Ascension and Tristan da Cunha Saint Kitts and Nevis Saint Lucia Saint Martin Saint Pierre and Miquelon Saint Vincent and the Grenadines Samoa San Marino Sao Tome and Principe Saudi Arabia Senegal Serbia Seychelles Sierra Leone Singapore Sint Maarten Slovakia Slovenia Solomon Islands Somalia South Africa South Georgia and the South Sandwich Islands South Sudan Spain Sri Lanka Sudan Suriname Svalbard and Jan Mayen Sweden Switzerland Syria Arab Republic Taiwan Tajikistan Tanzania, the United Republic of Thailand Timor-Leste Togo Tokelau Tonga Trinidad and Tobago Tunisia Turkmenistan Turks and Caicos Islands Tuvalu Türkiye US Minor Outlying Islands Uganda Ukraine United Arab Emirates United Kingdom United States Uruguay Uzbekistan Vanuatu Venezuela Viet Nam Virgin Islands, British Virgin Islands, U.S. Wallis and Futuna Western Sahara Yemen Zambia Zimbabwe Åland Islands \n                                         Country"
+          ],
+          "page_types": [
+            "home",
+            "contact"
+          ],
+          "urls": [
+            "https://hollytreeservice.net",
+            "https://hollytreeservice.net/contact/",
+            "https://hollytreeservice.net/about/"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "SteppIR Tree Services"
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "steppir.com",
+            "facebook.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Templo Ebenezer Weslaco Holding",
+        "phone": "(956) 968-8142",
+        "website": "",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "Templo Ebenezer Weslaco Holding",
+        "phone": [
+          "(956) 968-8142"
+        ],
+        "urls": [],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 117.46397,
+        "company": {
+          "domain": "temploebenezerweslaco.com",
+          "company_names": [
+            "TEMPLO EBENEZER WESLACO"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "Templo Ebenezer Weslaco Holding"
+          ],
+          "normalized_phones": [
+            "9569688142"
+          ],
+          "cleaned_urls": [],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "The Greenwich Cincinnati",
+        "phone": "+1513-221-1151",
+        "website": "",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "The Greenwich Cincinnati",
+        "phone": [
+          "+1513-221-1151"
+        ],
+        "urls": [],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 64.83421,
+        "company": {
+          "domain": "the-greenwich.com",
+          "company_names": [
+            "The Greenwich"
+          ],
+          "phones": [
+            "5132211151"
+          ],
+          "social_media": [
+            "https://www.facebook.com/pages/The-Greenwich/132754124391",
+            "http://www.twitter.com/thegreenwich"
+          ],
+          "addresses": [
+            "2442 Gilbert Ave., Cincinnati, OH 45206"
+          ],
+          "page_types": [
+            "other"
+          ],
+          "urls": [
+            "https://www.the-greenwich.com/"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "The Greenwich Cincinnati"
+          ],
+          "normalized_phones": [
+            "15132211151"
+          ],
+          "cleaned_urls": [],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Inc. Mercury",
+        "phone": "",
+        "website": "",
+        "facebook": "https://facebook.com/bluemercury"
+      },
+      "api_request": {
+        "name": "Inc. Mercury",
+        "phone": [],
+        "urls": [
+          "https://facebook.com/bluemercury"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 15.430429,
+        "company": {
+          "domain": "clockinc.org",
+          "company_names": [
+            "Clock Inc.",
+            "Free Clock Inc."
+          ],
+          "phones": [
+            "3095580956"
+          ],
+          "social_media": [
+            "https://www.instagram.com/clockinclgbt/",
+            "https://www.linkedin.com/in/clockinc/",
+            "https://twitter.com/clockincLGBT",
+            "http://facebook.com/clock.inc.qc",
+            "https://www.facebook.com/designs.chasing",
+            "https://www.facebook.com/clock.inc.qc/",
+            "https://www.instagram.com/clockinclgbt"
+          ],
+          "addresses": [
+            "4102 46th Ave., Rock Island, IL 61201",
+            "558-0956 ADDRESS 4102 46th Ave, Rock Island, IL 61201",
+            "4102 46th Ave, Rock Island, IL, USA"
+          ],
+          "page_types": [
+            "other",
+            "contact"
+          ],
+          "urls": [
+            "https://www.clockinc.org/",
+            "https://www.clockinc.org/contact",
+            "https://www.clockinc.org/team-3",
+            "https://www.clockinc.org/about-1",
+            "https://www.clockinc.org/about-1-1"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "Inc. Mercury"
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "facebook.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Total Seal Inc.",
+        "phone": "",
+        "website": "",
+        "facebook": "https://www.facebook.com/totalseal.pistonrings/"
+      },
+      "api_request": {
+        "name": "Total Seal Inc.",
+        "phone": [],
+        "urls": [
+          "https://www.facebook.com/totalseal.pistonrings/"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 110.23787,
+        "company": {
+          "domain": "totalseal.com",
+          "company_names": [
+            "Total Seal Piston Rings",
+            "Total Seal Inc.",
+            "Total Seal"
+          ],
+          "phones": [
+            "8008742753"
+          ],
+          "social_media": [
+            "https://soundcloud.com/user-224986972",
+            "https://www.instagram.com/total.seal/",
+            "https://www.facebook.com/totalseal.pistonrings/",
+            "https://www.youtube.com/channel/UCwcu9GQ0tsjaWGcn0bKAr3Q"
+          ],
+          "addresses": [
+            "17 - 9 AM to 1 PM 22642 North 15th Ave. Phoenix, AZ 85027"
+          ],
+          "page_types": [
+            "other",
+            "contact"
+          ],
+          "urls": [
+            "https://www.totalseal.com/",
+            "https://www.totalseal.com/about-us",
+            "https://www.totalseal.com/jobfair"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "Total Seal Inc."
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "facebook.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "True Audio Services",
+        "phone": "865-494-3388",
+        "website": "trueaudio.com",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "True Audio Services",
+        "phone": [
+          "865-494-3388"
+        ],
+        "urls": [
+          "trueaudio.com"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 113.43418,
+        "company": {
+          "domain": "trueaudio.com",
+          "company_names": [
+            "True Audio"
+          ],
+          "phones": [
+            "8654943388"
+          ],
+          "page_types": [
+            "home"
+          ],
+          "urls": [
+            "https://trueaudio.com"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "True Audio Services"
+          ],
+          "normalized_phones": [
+            "8654943388"
+          ],
+          "cleaned_urls": [
+            "trueaudio.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "ViruStar LLC.",
+        "phone": "",
+        "website": "viru.com",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "ViruStar LLC.",
+        "phone": [],
+        "urls": [
+          "viru.com"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 72.607086,
+        "company": {
+          "domain": "virustarllc.com",
+          "company_names": [
+            "ViruStar LLC.",
+            "VirusStar LLC."
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "ViruStar LLC."
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "viru.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "W. Works Holding(s)",
+        "phone": "",
+        "website": "wworks.net",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "W. Works Holding(s)",
+        "phone": [],
+        "urls": [
+          "wworks.net"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 39.146225,
+        "company": {
+          "domain": "wombatworks.org",
+          "company_names": [
+            "Wombat Works",
+            "Wombat Works LLC."
+          ],
+          "phones": [
+            "2153269228"
+          ],
+          "social_media": [
+            "https://twitter.com/WombatWorks",
+            "https://www.facebook.com/wombatworksllc"
+          ],
+          "page_types": [
+            "other",
+            "contact"
+          ],
+          "urls": [
+            "http://www.wombatworks.org/",
+            "http://www.wombatworks.org/contact.html",
+            "http://www.wombatworks.org/about.html",
+            "http://www.wombatworks.org/home.html"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "W. Works Holding(s)"
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "wworks.net"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Forge Marketing & Management Pty.",
+        "phone": "",
+        "website": "",
+        "facebook": "https://www.facebook.com/workitstudio/"
+      },
+      "api_request": {
+        "name": "Forge Marketing & Management Pty.",
+        "phone": [],
+        "urls": [
+          "https://www.facebook.com/workitstudio/"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 97.120964,
+        "company": {
+          "domain": "workitstudio.com",
+          "company_names": [
+            "Work It! Studio by WandaWoman",
+            "Forge Marketing & Management Pty.",
+            "Work It! Studio"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "Forge Marketing & Management Pty."
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "facebook.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "A W Brueggemann Co.",
+        "phone": "",
+        "website": "awbrueggemann.com",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "A W Brueggemann Co.",
+        "phone": [],
+        "urls": [
+          "awbrueggemann.com"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 123.16416,
+        "company": {
+          "domain": "awbrueggemann.com",
+          "company_names": [
+            "A W Brueggemann Co.",
+            "A.W. Brueggemann",
+            "A.W. Brueggemann Company Inc."
+          ],
+          "phones": [
+            "5802373857"
+          ],
+          "page_types": [
+            "home",
+            "contact"
+          ],
+          "urls": [
+            "https://awbrueggemann.com",
+            "https://awbrueggemann.com/contact-us/"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "A W Brueggemann Co."
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "awbrueggemann.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Blue Ridge Chair - Limited",
+        "phone": "",
+        "website": "https://www.blueridgechair.com",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "Blue Ridge Chair - Limited",
+        "phone": [],
+        "urls": [
+          "https://www.blueridgechair.com"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 167.64966,
+        "company": {
+          "domain": "blueridgechair.com",
+          "company_names": [
+            "Blue Ridge Chair",
+            "Blue Ridge Chair - Limited",
+            "Blue Ridge Chair Works"
+          ],
+          "social_media": [
+            "https://www.facebook.com/pages/Blue-Ridge-Chair-Works/276930045675311",
+            "https://www.instagram.com/blueridgechairworks/"
+          ],
+          "addresses": [
+            "134 School Road East Asheville NC, 28803"
+          ],
+          "page_types": [
+            "home",
+            "contact"
+          ],
+          "urls": [
+            "https://blueridgechair.com",
+            "https://blueridgechair.com/pages/contact"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "Blue Ridge Chair - Limited"
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "blueridgechair.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Cedar Work Inc.",
+        "phone": "",
+        "website": "cedarwork.org",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "Cedar Work Inc.",
+        "phone": [],
+        "urls": [
+          "cedarwork.org"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 103.669754,
+        "company": {
+          "domain": "cedarwork.org",
+          "company_names": [
+            "Cedar Work",
+            "Cedar Work International"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "Cedar Work Inc."
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "cedarwork.org"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "Inc.",
+        "phone": "",
+        "website": "",
+        "facebook": "https://facebook.com/bluemercury"
+      },
+      "api_request": {
+        "name": "Inc.",
+        "phone": [],
+        "urls": [
+          "https://facebook.com/bluemercury"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 15.430429,
+        "company": {
+          "domain": "clockinc.org",
+          "company_names": [
+            "Clock Inc.",
+            "Free Clock Inc."
+          ],
+          "phones": [
+            "3095580956"
+          ],
+          "social_media": [
+            "https://www.instagram.com/clockinclgbt/",
+            "https://www.linkedin.com/in/clockinc/",
+            "https://twitter.com/clockincLGBT",
+            "http://facebook.com/clock.inc.qc",
+            "https://www.facebook.com/designs.chasing",
+            "https://www.facebook.com/clock.inc.qc/",
+            "https://www.instagram.com/clockinclgbt"
+          ],
+          "addresses": [
+            "4102 46th Ave., Rock Island, IL 61201",
+            "558-0956 ADDRESS 4102 46th Ave, Rock Island, IL 61201",
+            "4102 46th Ave, Rock Island, IL, USA"
+          ],
+          "page_types": [
+            "other",
+            "contact"
+          ],
+          "urls": [
+            "https://www.clockinc.org/",
+            "https://www.clockinc.org/contact",
+            "https://www.clockinc.org/team-3",
+            "https://www.clockinc.org/about-1",
+            "https://www.clockinc.org/about-1-1"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            "Inc."
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "facebook.com"
+          ],
+          "addresses": []
+        }
+      }
+    },
+    {
+      "input_data": {
+        "name": "..",
+        "phone": "",
+        "website": "steppir.com",
+        "facebook": ""
+      },
+      "api_request": {
+        "name": "..",
+        "phone": [],
+        "urls": [
+          "steppir.com"
+        ],
+        "address": ""
+      },
+      "api_response": {
+        "found": true,
+        "score": 19.509869,
+        "company": {
+          "domain": "steppir.com",
+          "company_names": [
+            "SteppIR Communication Systems",
+            "SteppIR Inc.",
+            "SteppIR"
+          ]
+        },
+        "search_criteria": {
+          "names": [
+            ".."
+          ],
+          "normalized_phones": [],
+          "cleaned_urls": [
+            "steppir.com"
+          ],
+          "addresses": []
+        }
       }
     }
+  ],
+  "api_documentation": {
+    "endpoint": "/api/search",
+    "method": "POST",
+    "content_type": "application/json",
+    "fields": {
+      "name": "Company name(s) - supports multiple variations",
+      "phone": "Phone number(s) - automatically normalized",
+      "urls": "Website URLs - automatically cleaned and normalized",
+      "address": "Company address(es) - supports multiple formats",
+      "debug": "Boolean flag to return top 10 results instead of single best match"
+    },
+    "features": [
+      "Multiple values: All fields accept both single strings and arrays",
+      "Debug mode: Set debug=true to get top 10 results instead of best match",
+      "Smart matching: Fuzzy search with intelligent scoring",
+      "URL cleaning: Automatically removes protocols, www, and normalizes domains",
+      "Phone normalization: Extracts and normalizes phone numbers to digits-only"
+    ]
   }
 }

@@ -283,7 +283,7 @@ class TestAPIEndpoints(unittest.TestCase):
         # Verify download headers are set
         self.assertIn("attachment", response.headers.get("Content-Disposition", ""))
         self.assertIn(
-            "api_showcase_export_", response.headers.get("Content-Disposition", "")
+            "api_showcase_results_", response.headers.get("Content-Disposition", "")
         )
 
         # Verify the response contains valid JSON
@@ -293,23 +293,24 @@ class TestAPIEndpoints(unittest.TestCase):
 
         # Check for required structure
         self.assertIn("export_info", data)
-        self.assertIn("api_examples", data)
-        self.assertIn("api_features", data)
-        self.assertIn("field_descriptions", data)
-        self.assertIn("response_formats", data)
+        self.assertIn("results", data)
+        self.assertIn("api_documentation", data)
 
         # Verify export info
         self.assertIn("timestamp", data["export_info"])
         self.assertIn("description", data["export_info"])
-        self.assertIn("api_endpoint", data["export_info"])
+        self.assertIn("total_entries", data["export_info"])
+        self.assertIn("source", data["export_info"])
 
-        # Verify examples structure
-        self.assertIsInstance(data["api_examples"], list)
-        self.assertGreater(len(data["api_examples"]), 0)
+        # Verify results structure
+        self.assertIsInstance(data["results"], list)
+        # Results might be empty if no CSV file exists during testing
 
-        # Verify features structure
-        self.assertIsInstance(data["api_features"], list)
-        self.assertGreater(len(data["api_features"]), 0)
+        # Verify documentation structure
+        self.assertIn("endpoint", data["api_documentation"])
+        self.assertIn("method", data["api_documentation"])
+        self.assertIn("fields", data["api_documentation"])
+        self.assertIn("features", data["api_documentation"])
 
 
 if __name__ == "__main__":

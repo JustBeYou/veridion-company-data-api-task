@@ -324,130 +324,185 @@ def build_search_query(
 
 @api_bp.route("/showcase/export", methods=["GET"])
 def export_showcase_data() -> Any:
-    """Export showcase data as downloadable JSON."""
+    """Export the actual showcase results data as downloadable JSON."""
     try:
-        # This would typically get data from the same source as the showcase page
-        # For now, we'll create a sample structure that matches what would be displayed
+        import csv
         import json
+        import os
         from datetime import datetime
 
         from flask import make_response
 
-        # Sample data structure - in a real implementation, this would come from
-        # the same data source used by the showcase page
-        showcase_data = {
+        # Use the same logic as the showcase page to get the actual results
+        def load_csv_data() -> List[Dict[str, str]]:
+            """Load the API input sample CSV file."""
+            csv_path = os.path.join(
+                os.path.dirname(__file__), "..", "..", "configs", "API-input-sample.csv"
+            )
+
+            data = []
+            try:
+                with open(csv_path, "r", encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    for row in reader:
+                        # Skip empty rows
+                        if any(v.strip() for v in row.values() if v):
+                            data.append(row)
+            except FileNotFoundError:
+                logger.warning(f"CSV file not found: {csv_path}")
+            except Exception as e:
+                logger.warning(f"Error reading CSV: {e}")
+
+            return data
+
+        def process_csv_entry(entry: Dict[str, str]) -> Dict[str, Any]:
+            """
+            Process a single CSV entry and call the search API.
+
+            Args:
+                entry: Dictionary containing CSV row data
+
+            Returns:
+                Dict containing the search result and metadata
+            """
+            # Extract data from CSV entry
+            name = entry.get("input name", "").strip()
+            phone = entry.get("input phone", "").strip()
+            website = entry.get("input website", "").strip()
+            facebook = entry.get("input_facebook", "").strip()
+
+            # Build URLs list
+            urls = []
+            if website:
+                urls.append(website)
+            if facebook:
+                urls.append(facebook)
+
+            # Build phone list
+            phones = [phone] if phone else []
+
+            # Prepare API request data
+            api_data = {
+                "name": name,
+                "phone": phones,
+                "urls": urls,
+                "address": "",  # No address in CSV
+            }
+
+            # Call the search API directly (internal call, not HTTP)
+            try:
+                # Use the same search logic as the API endpoint
+                names = [name] if name else []
+                normalized_phones = [
+                    normalize_phone(phone)
+                    for phone in phones
+                    if phone and phone.strip()
+                ]
+                cleaned_urls = [clean_url(url) for url in urls if url and url.strip()]
+                cleaned_addresses: List[str] = []
+
+                if names or normalized_phones or cleaned_urls:
+                    # Initialize Elasticsearch client
+                    es_importer = ElasticsearchImporter()
+
+                    # Build and execute search
+                    search_query = build_search_query(
+                        names, normalized_phones, cleaned_urls, cleaned_addresses
+                    )
+                    results = es_importer.es_client.search(
+                        index=es_importer.index_name, body=search_query, size=1
+                    )
+
+                    hits = results.get("hits", {}).get("hits", [])
+                    if hits:
+                        result = {
+                            "found": True,
+                            "score": hits[0]["_score"],
+                            "company": hits[0]["_source"],
+                            "search_criteria": {
+                                "names": names,
+                                "normalized_phones": normalized_phones,
+                                "cleaned_urls": cleaned_urls,
+                                "addresses": cleaned_addresses,
+                            },
+                        }
+                    else:
+                        result = {
+                            "found": False,
+                            "message": "No matching companies found",
+                            "search_criteria": {
+                                "names": names,
+                                "normalized_phones": normalized_phones,
+                                "cleaned_urls": cleaned_urls,
+                                "addresses": cleaned_addresses,
+                            },
+                        }
+                else:
+                    result = {
+                        "found": False,
+                        "error": "At least one search field must be provided",
+                    }
+
+            except Exception as api_error:
+                result = {"found": False, "error": f"API call failed: {str(api_error)}"}
+
+            return {
+                "input_data": {
+                    "name": name,
+                    "phone": phone,
+                    "website": website,
+                    "facebook": facebook,
+                },
+                "api_request": api_data,
+                "api_response": result,
+            }
+
+        # Load CSV data and process entries (same as showcase page)
+        csv_data = load_csv_data()
+        results = []
+
+        # Process each CSV entry
+        for entry in csv_data:
+            result = process_csv_entry(entry)
+            results.append(result)
+
+        # Create export data structure
+        export_data = {
             "export_info": {
                 "timestamp": datetime.now().isoformat(),
-                "description": "API Search Showcase Export",
-                "api_endpoint": "/api/search",
-                "total_entries": 0,  # This would be populated from actual data
+                "description": "API Search Showcase Results Export",
+                "source": "API-input-sample.csv",
+                "total_entries": len(results),
+                "note": "Contains actual API test results from CSV data displayed on /api-showcase page",
             },
-            "api_examples": [
-                {
-                    "name": "Basic Search",
-                    "description": "Single result search",
-                    "request": {
-                        "method": "POST",
-                        "url": "/api/search",
-                        "headers": {"Content-Type": "application/json"},
-                        "body": {
-                            "name": ["Acme Corporation", "Acme Corp"],
-                            "phone": ["555-123-4567", "+1-555-123-4567"],
-                            "urls": ["https://www.acme.com", "acme.com"],
-                            "address": ["123 Main St, Anytown USA", "123 Main Street"],
-                        },
-                    },
+            "results": results,
+            "api_documentation": {
+                "endpoint": "/api/search",
+                "method": "POST",
+                "content_type": "application/json",
+                "fields": {
+                    "name": "Company name(s) - supports multiple variations",
+                    "phone": "Phone number(s) - automatically normalized",
+                    "urls": "Website URLs - automatically cleaned and normalized",
+                    "address": "Company address(es) - supports multiple formats",
+                    "debug": "Boolean flag to return top 10 results instead of single best match",
                 },
-                {
-                    "name": "Debug Search",
-                    "description": "Top 10 results search",
-                    "request": {
-                        "method": "POST",
-                        "url": "/api/search",
-                        "headers": {"Content-Type": "application/json"},
-                        "body": {
-                            "name": ["Tech Solutions"],
-                            "phone": ["555-987-6543"],
-                            "debug": True,
-                        },
-                    },
-                },
-            ],
-            "api_features": [
-                "Multiple values: All fields accept both single strings and arrays",
-                "Debug mode: Set debug=true to get top 10 results instead of best match",
-                "Smart matching: Fuzzy search with intelligent scoring",
-                "URL cleaning: Automatically removes protocols, www, and normalizes domains",
-                "Phone normalization: Extracts and normalizes phone numbers to digits-only",
-            ],
-            "field_descriptions": {
-                "name": "Company name(s) - supports multiple variations",
-                "phone": "Phone number(s) - automatically normalized",
-                "urls": "Website URLs - automatically cleaned and normalized",
-                "address": "Company address(es) - supports multiple formats",
-                "debug": "Boolean flag to return top 10 results instead of single best match",
-            },
-            "response_formats": {
-                "single_result": {
-                    "found": True,
-                    "score": 2.5,
-                    "company": {
-                        "domain": "example.com",
-                        "company_names": ["Example Corp"],
-                        "phones": ["5551234567"],
-                        "addresses": ["123 Main St"],
-                    },
-                    "search_criteria": {
-                        "names": ["Example Corp"],
-                        "normalized_phones": ["5551234567"],
-                        "cleaned_urls": ["example.com"],
-                        "addresses": ["123 Main St"],
-                    },
-                },
-                "debug_results": {
-                    "found": True,
-                    "results": [
-                        {
-                            "score": 2.5,
-                            "company": {
-                                "domain": "example1.com",
-                                "company_names": ["Company 1"],
-                            },
-                        },
-                        {
-                            "score": 2.0,
-                            "company": {
-                                "domain": "example2.com",
-                                "company_names": ["Company 2"],
-                            },
-                        },
-                    ],
-                    "search_criteria": {
-                        "names": ["Example"],
-                        "normalized_phones": [],
-                        "cleaned_urls": [],
-                        "addresses": [],
-                    },
-                },
-                "no_results": {
-                    "found": False,
-                    "message": "No matching companies found",
-                    "search_criteria": {
-                        "names": ["NonExistent Corp"],
-                        "normalized_phones": [],
-                        "cleaned_urls": [],
-                        "addresses": [],
-                    },
-                },
+                "features": [
+                    "Multiple values: All fields accept both single strings and arrays",
+                    "Debug mode: Set debug=true to get top 10 results instead of best match",
+                    "Smart matching: Fuzzy search with intelligent scoring",
+                    "URL cleaning: Automatically removes protocols, www, and normalizes domains",
+                    "Phone normalization: Extracts and normalizes phone numbers to digits-only",
+                ],
             },
         }
 
         # Create response with proper headers for file download
-        response_data = json.dumps(showcase_data, indent=2, ensure_ascii=False)
+        response_data = json.dumps(export_data, indent=2, ensure_ascii=False)
         response = make_response(response_data)
         response.headers["Content-Type"] = "application/json"
         response.headers["Content-Disposition"] = (
-            f'attachment; filename=api_showcase_export_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+            f'attachment; filename=api_showcase_results_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
         )
 
         return response
