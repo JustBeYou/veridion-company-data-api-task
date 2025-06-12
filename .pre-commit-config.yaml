@@ -32,6 +32,6 @@ repos:
     rev: v1.16.0
     hooks:
       - id: mypy
-        additional_dependencies: [types-requests,lxml-stubs,flask]
+        additional_dependencies: [types-requests,lxml-stubs,flask,elasticsearch]
         files: ^crawler/src/
         args: [--config-file=crawler/pyproject.toml]

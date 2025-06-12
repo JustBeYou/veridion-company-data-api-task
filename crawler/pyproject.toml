@@ -17,6 +17,7 @@ flask = "^3.1.1"
 gunicorn = "^23.0.0"
 phonenumbers = "^9.0.7"
 pyap = "^0.3.1"
+elasticsearch = "^9.0.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "25.1.0"
