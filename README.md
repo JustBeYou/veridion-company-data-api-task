@@ -4,7 +4,7 @@ Company Data API (SW Engineer)
 # Overview
 
 **Disclaimer**: I did use LLM tools (ChatGPT, Claude, Cursor) for speeding up development as I would do for any day
-to day work.
+to day work. I spent around 16 hours on the solution, ~ 2 work days.
 
 **Note**: Please see the **in scope** and **out of scope** sections below to get a better understanding of what is included in the solution.
 
@@ -21,6 +21,51 @@ docker compose up # The scraper will start automatically, you should be able to 
 
 * **Scraper dashboard** - http://localhost:5000
 * **Kibana** - http://localhost:5601
+* **API** - http://localhost:5000/api/search
+
+Example API call:
+```bash
+curl -X POST http://localhost:5000/api/search \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": ["Acme Corporation", "Acme Corp"],
+    "phone": ["555-123-4567", "+1-555-123-4567"],
+    "urls": ["https://www.acme.com", "acme.com"],
+    "address": ["123 Main St, Anytown USA", "123 Main Street"]
+  }'
+```
+
+Example response:
+```json
+{
+  "company": {
+    "company_names": [
+      "1st American Mortgage Corporation"
+    ],
+    "domain": "1stamc.com"
+  },
+  "found": true,
+  "score": 29.686008,
+  "search_criteria": {
+    "addresses": [
+      "123 Main St, Anytown USA",
+      "123 Main Street"
+    ],
+    "cleaned_urls": [
+      "acme.com",
+      "acme.com"
+    ],
+    "names": [
+      "Acme Corporation",
+      "Acme Corp"
+    ],
+    "normalized_phones": [
+      "5551234567",
+      "15551234567"
+    ]
+  }
+}
+```
 
 ## In Scope
 
@@ -70,6 +115,8 @@ rules better suit our usecase. Some raw notes about the experiments can be found
 
 ## Data retrieval
 
+### Importing data into ES
+
 Merging the scraped data with the CSV was straightforward. All data is indexed by the domain (one record per unique domain).
 I chose to import the data into ElasticSerach, because I am familiar enough with it and it's a widely used software.
 
@@ -81,6 +128,24 @@ I chose to import the data into ElasticSerach, because I am familiar enough with
 
 ![Kibana showing statistics about the scraped data.](https://github.com/user-attachments/assets/68164548-ed89-4e02-97b1-baab795c1d6e)
 
-TBD API
+### Exposing the API
+
+The API is a simple Flask POST route that takes as input a list of values for each field type we seen until now (names, phone numbers, urls, addresses) and performs
+the following operations:
+
+1. Input data is normalized - phone numbers are kept as numbers only, protocol and `www` subdomain is removed from urls
+2. We perform a ElasticSearch query with multiple clauses:
+  * fuzzy match for provided names against the stored names (BOOST: names have higher boost values)
+  * term match for exact names
+  * fuzzy match for provided names after processing: split names by capital letters and abbreviations
+  * term match for phone numbers (BOOST: medium values for phones and links as there may be collisions)
+  * term match for all links
+  * fuzzy match for addresses (BOOST: addresses have lower values as there is a lot of noise)
+3. We return the entry with the highest score (if any).
+
+![Showcase of a few responses from the CSV.](https://github.com/user-attachments/assets/7106a0f2-5429-45ce-9824-3227a1fcce15)
 
 ## Bonus points
+
+Some ideas about how one could evaluate the quality of the macthes:
+* 
