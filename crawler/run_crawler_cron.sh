@@ -13,7 +13,7 @@ echo "Starting crawler cron with ${CRAWLER_SLEEP_MINUTES} minute intervals..."
 
 # Import sample websites at startup
 echo "Importing sample websites..."
-python3 src/cli/run_es_import.py import-csv configs/sample-websites-company-names.csv
+python3 src/cli/run_es_import.py --es-host http://elasticsearch:9200 import-csv configs/sample-websites-company-names.csv
 
 while true; do
     echo "Starting crawler..."
@@ -21,7 +21,11 @@ while true; do
 
     # Import latest companies file after crawler finishes
     echo "Importing latest companies data..."
-    python3 src/cli/run_es_import.py import-csv configs/companies-domains.csv
+
+    # Get the latest JSON file from the crawler
+    latest_json_file=$(ls -t data/companies_*.json | head -n 1)
+    echo "Importing latest companies data from $latest_json_file..."
+    python3 src/cli/run_es_import.py --es-host http://elasticsearch:9200 import-json $latest_json_file
 
     echo "Crawler finished. Waiting ${CRAWLER_SLEEP_MINUTES} minutes for next run..."
     sleep $((CRAWLER_SLEEP_MINUTES * 60))
