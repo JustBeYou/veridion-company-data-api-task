@@ -3,7 +3,7 @@ import os
 
 from behave import given, then, when
 
-from src.crawler import run_crawler
+from src.cli.run_crawler import run_crawler
 
 
 @given("the crawler is configured to process 5 domains")

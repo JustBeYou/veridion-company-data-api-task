@@ -65,4 +65,4 @@ RUN mkdir -p /app/data && chown -R appuser:appuser /app
 USER appuser
 
 # Default command (can be overridden by docker-compose)
-CMD ["python3", "src/crawler.py"]
+CMD ["python3", "src/cli/run_crawler.py"]

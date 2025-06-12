@@ -40,20 +40,13 @@
         <!-- Card Body -->
         <div class="p-6">
             <!-- Success Rates -->
-            <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="flex justify-center mb-4">
                 <div class="text-center">
                     <div
                         class="text-2xl font-bold {% if run.success_rates.domain_success_rate >= 70 %}text-green-600{% elif run.success_rates.domain_success_rate >= 50 %}text-yellow-600{% else %}text-red-600{% endif %}">
                         {{ "%.0f"|format(run.success_rates.domain_success_rate) }}%
                     </div>
                     <div class="text-xs text-gray-500">Domain Success</div>
-                </div>
-                <div class="text-center">
-                    <div
-                        class="text-2xl font-bold {% if run.success_rates.page_success_rate >= 90 %}text-green-600{% elif run.success_rates.page_success_rate >= 70 %}text-yellow-600{% else %}text-red-600{% endif %}">
-                        {{ "%.0f"|format(run.success_rates.page_success_rate) }}%
-                    </div>
-                    <div class="text-xs text-gray-500">Page Success</div>
                 </div>
             </div>
 

@@ -43,10 +43,10 @@ pre-commit:
 	poetry run pre-commit run
 
 run-crawler:
-	poetry run python3 src/crawler.py
+	poetry run python3 src/cli/run_crawler.py
 
 run-crawler-eval:
-	poetry run python3 src/run_crawler.py --domains-file configs/companies-domains.csv --domain-limit 10000
+	poetry run python3 src/cli/run_crawler.py --domains-file configs/companies-domains.csv --domain-limit 10000
 
 run-dashboard:
 	poetry run python3 src/dashboard/app.py

@@ -13,7 +13,7 @@ echo "Starting crawler cron with ${CRAWLER_SLEEP_MINUTES} minute intervals..."
 
 while true; do
     echo "Starting crawler..."
-    python3 src/run_crawler.py --domains-file configs/companies-domains.csv --domain-limit $DOMAIN_LIMIT || true
+    python3 src/cli/run_crawler.py --domains-file configs/companies-domains.csv --domain-limit $DOMAIN_LIMIT || true
     echo "Crawler finished. Waiting ${CRAWLER_SLEEP_MINUTES} minutes for next run..."
     sleep $((CRAWLER_SLEEP_MINUTES * 60))
 done

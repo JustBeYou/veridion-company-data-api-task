@@ -72,19 +72,6 @@
                         style="width: {{ stats.success_rates.domain_success_rate }}%"></div>
                 </div>
             </div>
-            <div>
-                <div class="flex justify-between mb-2">
-                    <span class="text-gray-600">Page Success Rate</span>
-                    <span
-                        class="font-bold {% if stats.success_rates.page_success_rate >= 90 %}text-green-600{% elif stats.success_rates.page_success_rate >= 70 %}text-yellow-600{% else %}text-red-600{% endif %}">
-                        {{ "%.1f"|format(stats.success_rates.page_success_rate) }}%
-                    </span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="{% if stats.success_rates.page_success_rate >= 90 %}bg-green-600{% elif stats.success_rates.page_success_rate >= 70 %}bg-yellow-600{% else %}bg-red-600{% endif %} h-2 rounded-full"
-                        style="width: {{ stats.success_rates.page_success_rate }}%"></div>
-                </div>
-            </div>
         </div>
     </div>
 
