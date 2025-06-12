@@ -3,6 +3,7 @@ API endpoints for company data search.
 """
 
 import logging
+import os
 import re
 from typing import Any, Dict, List
 from urllib.parse import urlparse
@@ -132,7 +133,7 @@ def search_companies() -> Any:
         ]
 
         # Initialize Elasticsearch client
-        es_importer = ElasticsearchImporter()
+        es_importer = ElasticsearchImporter(es_host=os.environ.get("ES_URI"))  # type: ignore
 
         # Build Elasticsearch query
         search_query = build_search_query(
@@ -403,7 +404,9 @@ def export_showcase_data() -> Any:
 
                 if names or normalized_phones or cleaned_urls:
                     # Initialize Elasticsearch client
-                    es_importer = ElasticsearchImporter()
+                    es_importer = ElasticsearchImporter(
+                        es_host=os.environ.get("ES_URI")  # type: ignore
+                    )
 
                     # Build and execute search
                     search_query = build_search_query(

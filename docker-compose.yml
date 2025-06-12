@@ -94,6 +94,7 @@ services:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
       - FLASK_ENV=production
+      - ES_URI=http://elasticsearch:9200
     user: "1000:1000"
     depends_on:
       crawler:
